@@ -1,0 +1,44 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<!-- ko if: current() -->
+<section class="bce-completeness-hints__card" data-bind="attr: {'aria-labelledby': 'bce-hints-title'}">
+    <div class="bce-completeness-hints__head">
+        <h3 id="bce-hints-title" class="bce-completeness-hints__title" data-bind="text: current().title"></h3>
+        <p class="bce-completeness-muted" data-bind="text: current().note"></p>
+    </div>
+    <ul class="bce-completeness-hints__list" data-bind="foreach: current().hints">
+        <li class="bce-completeness-hints__row" data-bind="css: {'bce-completeness-hints__row--added': $parent.isAdded($data)}">
+            <div class="bce-completeness-hints__text">
+                <strong data-bind="text: label"></strong>
+                <span class="bce-completeness-muted" data-bind="text: note"></span>
+                <span class="bce-completeness-hints__rule">
+                    <span data-bind="text: $parent.describe($data)"></span>
+                    <span aria-hidden="true">·</span>
+                    <span data-bind="text: $parent.weightLabel($data)"></span>
+                </span>
+            </div>
+            <!-- ko ifnot: $parent.isAdded($data) -->
+            <button type="button" class="action-secondary bce-completeness-hints__add" data-bind="click: function () { $parent.add($data); }, attr: {'aria-label': $parent.addLabel($data)}">
+                <span data-bind="i18n: 'Add'"></span>
+            </button>
+            <!-- /ko -->
+            <!-- ko if: $parent.isAdded($data) -->
+            <span class="bce-completeness-hints__added" data-bind="i18n: 'Added'"></span>
+            <!-- /ko -->
+        </li>
+    </ul>
+    <p class="bce-completeness-muted bce-completeness-hints__foot" data-bind="i18n: 'Each Add appends one row with the attribute left for you to choose. Category-specific requirements are not listed.'"></p>
+</section>
+<!-- /ko -->
+<!-- ko ifnot: current() -->
+<!-- ko if: kind() === 'channel' -->
+<section class="bce-completeness-hints__card">
+    <h3 class="bce-completeness-hints__title" data-bind="i18n: 'Suggested'"></h3>
+    <p class="bce-completeness-muted" data-bind="i18n: 'Choose a channel to see what it commonly requires. A custom profile has no suggestions: add the rules your feed or marketplace needs.'"></p>
+</section>
+<!-- /ko -->
+<!-- /ko -->

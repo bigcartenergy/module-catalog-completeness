@@ -1,0 +1,69 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard $dashboard */
+$dashboard = $block->getData('dashboard');
+$state = $dashboard->getState();
+$firstRun = $state === \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard::STATE_FIRST_RUN;
+$noScores = $firstRun || $state === \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard::STATE_NEVER;
+$status = $dashboard->getStatus();
+$running = $status['state'] === \BigCartEnergy\CatalogCompleteness\Model\Dashboard\StatusReader::STATE_RECALCULATING;
+$filter = $dashboard->getFilter();
+$filterClass = \BigCartEnergy\CatalogCompleteness\Model\Dashboard\Filter::class;
+$scoreOnly = [$filterClass::PARAM_COVERAGE, $filterClass::PARAM_BAND, $filterClass::PARAM_TILE, $filterClass::PARAM_RULE];
+?>
+<div class="bce-completeness-actions" data-role="bce-completeness-actions">
+    <div class="bce-completeness-actions__controls">
+        <form class="bce-completeness-actions__scope" method="get" action="<?= $block->escapeUrl($dashboard->getDashboardUrl()) ?>" data-role="bce-scope-form">
+            <?php foreach ($filter->cleared()->toParams() as $name => $value): ?>
+                <?php if ($name !== \BigCartEnergy\CatalogCompleteness\Model\Dashboard\Filter::PARAM_SCOPE): ?>
+                    <input type="hidden" name="<?= $block->escapeHtmlAttr($name) ?>" value="<?= $block->escapeHtmlAttr($value) ?>">
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <label class="bce-completeness-actions__label" for="bce-completeness-scope"><?= $block->escapeHtml(__('Rule set')) ?></label>
+            <select id="bce-completeness-scope" name="scope" class="admin__control-select bce-completeness-actions__select" data-role="bce-autosubmit"<?= $firstRun ? ' disabled' : '' ?>>
+                <?php if ($firstRun): ?>
+                    <option value=""><?= $block->escapeHtml(__('No rule sets yet')) ?></option>
+                <?php else: ?>
+                    <?php foreach ($dashboard->getScopeOptions() as $option): ?>
+                        <?php $selected = (string)($filter->getRulesetId() ?? '') === $option['value']; ?>
+                        <option value="<?= $block->escapeHtmlAttr($option['value']) ?>"<?= $selected ? ' selected' : '' ?>><?= $block->escapeHtml($option['label']) ?></option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+        </form>
+        <form class="bce-completeness-actions__scope" method="get" action="<?= $block->escapeUrl($dashboard->getDashboardUrl()) ?>" data-role="bce-coverage-form">
+            <?php foreach ($filter->toParams() as $name => $value): ?>
+                <?php if (!in_array($name, $scoreOnly, true)): ?>
+                    <input type="hidden" name="<?= $block->escapeHtmlAttr($name) ?>" value="<?= $block->escapeHtmlAttr($value) ?>">
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <label class="bce-completeness-actions__label" for="bce-completeness-coverage"><?= $block->escapeHtml(__('Rule coverage')) ?></label>
+            <select id="bce-completeness-coverage" name="coverage" class="admin__control-select bce-completeness-actions__select" data-role="bce-autosubmit"<?= $firstRun ? ' disabled' : '' ?>>
+                <option value=""><?= $block->escapeHtml(__('Products with rules')) ?></option>
+                <option value="<?= $block->escapeHtmlAttr($filterClass::COVERAGE_NONE) ?>"<?= $filter->isUncoveredOnly() ? ' selected' : '' ?>><?= $block->escapeHtml($firstRun ? __('No rules assigned') : __('No rules assigned (%1)', $dashboard->formatNumber($dashboard->countUncovered()))) ?></option>
+            </select>
+        </form>
+    </div>
+    <div class="bce-completeness-actions__buttons">
+        <a class="bce-completeness-actions__link" href="<?= $block->escapeUrl($dashboard->getManageUrl()) ?>"><?= $block->escapeHtml(__('Manage rule sets')) ?></a>
+        <?php if ($dashboard->canExport()): ?>
+            <form method="post" action="<?= $block->escapeUrl($dashboard->getExportUrl()) ?>" class="bce-completeness-actions__form">
+                <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()) ?>">
+                <?php foreach ($filter->toParams() as $name => $value): ?>
+                    <input type="hidden" name="<?= $block->escapeHtmlAttr($name) ?>" value="<?= $block->escapeHtmlAttr($value) ?>">
+                <?php endforeach; ?>
+                <button type="submit" class="action-secondary"<?= $noScores ? ' disabled' : '' ?>><span><?= $block->escapeHtml(__('Export CSV')) ?></span></button>
+            </form>
+        <?php endif; ?>
+        <?php if ($dashboard->canRecalculate()): ?>
+            <button type="button" class="action-secondary" data-role="bce-recalculate"<?= ($firstRun || $running) ? ' disabled' : '' ?>>
+                <span data-role="bce-recalculate-label"><?= $block->escapeHtml($running ? __('Recalculating…') : __('Recalculate')) ?></span>
+            </button>
+        <?php endif; ?>
+    </div>
+</div>

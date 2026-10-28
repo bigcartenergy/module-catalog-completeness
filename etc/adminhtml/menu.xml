@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="BigCartEnergy_CatalogCompleteness::menu" title="PIM: Catalog Completeness" translate="title" module="BigCartEnergy_CatalogCompleteness" sortOrder="10" parent="BigCartEnergy_Core::menu" resource="BigCartEnergy_CatalogCompleteness::completeness"/>
+        <add id="BigCartEnergy_CatalogCompleteness::overview" title="Dashboard" translate="title" module="BigCartEnergy_CatalogCompleteness" sortOrder="10" parent="BigCartEnergy_CatalogCompleteness::menu" action="bce_completeness/dashboard/index" resource="BigCartEnergy_CatalogCompleteness::dashboard"/>
+        <add id="BigCartEnergy_CatalogCompleteness::rulesets" title="Rule sets" translate="title" module="BigCartEnergy_CatalogCompleteness" sortOrder="20" parent="BigCartEnergy_CatalogCompleteness::menu" action="bce_completeness/ruleset/index" resource="BigCartEnergy_CatalogCompleteness::rulesets"/>
+        <add id="BigCartEnergy_CatalogCompleteness::settings" title="Settings" translate="title" module="BigCartEnergy_CatalogCompleteness" sortOrder="30" parent="BigCartEnergy_CatalogCompleteness::menu" action="adminhtml/system_config/edit/section/bce_completeness" resource="BigCartEnergy_CatalogCompleteness::config"/>
+    </menu>
+</config>

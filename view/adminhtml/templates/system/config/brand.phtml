@@ -1,0 +1,22 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\Core\ViewModel\Brand $brand */
+$brand = $block->getData('brand');
+$version = (string)$block->getData('version');
+?>
+<div class="comment bce-completeness-settings-brand">
+    <span class="bce-brand-lockup">
+        <?= /* @noEscape */ $brand->getMarkSvg(16) ?>
+        <span><?= $block->escapeHtml(__('Catalog Completeness')) ?><?php if ($version !== ''): ?> <?= $block->escapeHtml($version) ?><?php endif; ?> <?= $block->escapeHtml(__('by Big Cart Energy')) ?></span>
+    </span>
+    <span class="bce-completeness-settings-brand__links">
+        <a href="<?= $block->escapeUrl($brand->getSiteUrl()) ?>" target="_blank" rel="noopener"><?= $block->escapeHtml(__('bigcartenergy.com')) ?></a>
+        <a href="<?= $block->escapeUrl($brand->getToolsUrl()) ?>" target="_blank" rel="noopener"><?= $block->escapeHtml(__('Free tools and patches')) ?></a>
+        <a href="<?= $block->escapeUrl($brand->getContactUrl()) ?>" target="_blank" rel="noopener"><?= $block->escapeHtml(__('Installation and configuration service')) ?></a>
+    </span>
+</div>

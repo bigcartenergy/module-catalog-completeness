@@ -1,0 +1,32 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<!-- ko if: needed() -->
+<div class="bce-completeness-parameter" data-bind="css: {'_mono': isPattern()}">
+    <textarea class="admin__control-text admin__control-textarea bce-completeness-parameter__input" rows="1"
+           data-bind="
+                event: {change: userChanges, keydown: onParameterKey, input: autosize},
+                value: value,
+                hasFocus: focused,
+                valueUpdate: valueUpdate,
+                css: {'bce-completeness-code': isPattern()},
+                attr: {
+                    name: inputName,
+                    id: uid,
+                    disabled: disabled,
+                    placeholder: hint(),
+                    'aria-label': hint(),
+                    maxlength: 2000
+                }"></textarea>
+    <!-- ko if: unit() -->
+    <span class="bce-completeness-parameter__unit bce-completeness-muted" data-bind="text: unit()"></span>
+    <!-- /ko -->
+</div>
+<!-- /ko -->
+<!-- ko ifnot: needed() -->
+<input type="hidden" data-bind="attr: {name: inputName, id: uid}" value="">
+<span class="bce-completeness-parameter__none bce-completeness-muted" data-bind="i18n: 'Not needed'"></span>
+<!-- /ko -->

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/bce-completeness/products/:productId/scores" method="GET">
+        <service class="BigCartEnergy\CatalogCompleteness\Api\CompletenessManagementInterface" method="getProductScores"/>
+        <resources>
+            <resource ref="BigCartEnergy_CatalogCompleteness::dashboard"/>
+        </resources>
+    </route>
+    <route url="/V1/bce-completeness/products/:productId/recalculate" method="POST">
+        <service class="BigCartEnergy\CatalogCompleteness\Api\CompletenessManagementInterface" method="recalculateProduct"/>
+        <resources>
+            <resource ref="BigCartEnergy_CatalogCompleteness::recalculate"/>
+        </resources>
+    </route>
+    <route url="/V1/bce-completeness/rulesets" method="GET">
+        <service class="BigCartEnergy\CatalogCompleteness\Api\CompletenessManagementInterface" method="getRuleSets"/>
+        <resources>
+            <resource ref="BigCartEnergy_CatalogCompleteness::rulesets"/>
+        </resources>
+    </route>
+</routes>

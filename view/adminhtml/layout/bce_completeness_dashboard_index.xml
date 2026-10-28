@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <body>
+        <referenceContainer name="page.main.actions">
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.dashboard.actions" template="BigCartEnergy_CatalogCompleteness::dashboard/actions.phtml">
+                <arguments>
+                    <argument name="dashboard" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard</argument>
+                    <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.dashboard" template="BigCartEnergy_CatalogCompleteness::dashboard/page.phtml">
+                <arguments>
+                    <argument name="dashboard" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard</argument>
+                    <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                </arguments>
+                <block class="Magento\Backend\Block\Template" name="bce_completeness.dashboard.status" as="status" template="BigCartEnergy_CatalogCompleteness::dashboard/status.phtml">
+                    <arguments>
+                        <argument name="dashboard" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard</argument>
+                        <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Backend\Block\Template" name="bce_completeness.dashboard.filters" as="filters" template="BigCartEnergy_CatalogCompleteness::dashboard/filters.phtml">
+                    <arguments>
+                        <argument name="dashboard" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Backend\Block\Template" name="bce_completeness.dashboard.tiles" as="tiles" template="BigCartEnergy_CatalogCompleteness::dashboard/tiles.phtml">
+                    <arguments>
+                        <argument name="dashboard" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Backend\Block\Template" name="bce_completeness.dashboard.cards" as="cards" template="BigCartEnergy_CatalogCompleteness::dashboard/cards.phtml">
+                    <arguments>
+                        <argument name="dashboard" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard</argument>
+                    </arguments>
+                </block>
+                <container name="bce_completeness.dashboard.worklist" as="worklist" htmlTag="div" htmlClass="bce-completeness-worklist">
+                    <uiComponent name="bce_completeness_worklist_listing"/>
+                </container>
+            </block>
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.footer" template="BigCartEnergy_CatalogCompleteness::brand/footer.phtml" after="-">
+                <arguments>
+                    <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

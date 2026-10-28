@@ -1,0 +1,18 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<span class="thumbnail-container bce-completeness-thumb">
+    <!-- ko if: $col.hasImage($row()) -->
+    <span class="thumbnail-wrapper">
+        <img class="admin__control-thumbnail" data-bind="attr: {src: $col.getSrc($row()), alt: $col.getAlt($row())}" loading="lazy"/>
+    </span>
+    <!-- /ko -->
+    <!-- ko ifnot: $col.hasImage($row()) -->
+    <span class="bce-completeness-thumb__none" role="img" data-bind="attr: {'aria-label': $t('No image')}">
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.4"></path></svg>
+    </span>
+    <!-- /ko -->
+</span>

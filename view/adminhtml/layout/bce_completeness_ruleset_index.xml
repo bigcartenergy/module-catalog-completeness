@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <body>
+        <referenceContainer name="page.main.actions">
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.brand_line" template="BigCartEnergy_CatalogCompleteness::brand/lockup.phtml" before="-">
+                <arguments>
+                    <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.ruleset.actions" template="BigCartEnergy_CatalogCompleteness::ruleset/actions.phtml" after="bce_completeness.brand_line">
+                <arguments>
+                    <argument name="dashboard" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <uiComponent name="bce_completeness_ruleset_listing"/>
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.footer" template="BigCartEnergy_CatalogCompleteness::brand/footer.phtml" after="-">
+                <arguments>
+                    <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

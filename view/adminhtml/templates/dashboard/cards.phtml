@@ -1,0 +1,125 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard $dashboard */
+$dashboard = $block->getData('dashboard');
+$summary = $dashboard->getSummary();
+$distribution = $dashboard->getDistribution();
+$by = $dashboard->getBreakdownBy();
+$breakdown = $dashboard->getBreakdown();
+$mostMissing = $dashboard->getMostMissing();
+$groupings = $dashboard->getGroupings();
+$chip = function (string $code) use ($dashboard, $block): string {
+    return '<span class="bce-completeness-chip bce-completeness-chip--' . $block->escapeHtmlAttr($code) . '">'
+        . '<svg class="bce-completeness-chip__icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#bce-completeness-icon-' . $block->escapeHtmlAttr($code) . '"></use></svg>'
+        . '<span>' . $block->escapeHtml($dashboard->getBandLabel($code)) . '</span></span>';
+};
+$weightChip = function (int $weight, string $label) use ($block): string {
+    $bars = '';
+    for ($i = 1; $i <= 3; $i++) {
+        $bars .= '<span class="bce-completeness-weight__bar' . ($i <= $weight ? ' bce-completeness-weight__bar--on' : '') . '"></span>';
+    }
+    return '<span class="bce-completeness-weight"><span class="bce-completeness-weight__bars" aria-hidden="true">' . $bars . '</span>'
+        . $block->escapeHtml($label) . '</span>';
+};
+?>
+<div class="bce-completeness-cards">
+    <div class="bce-completeness-cards__left">
+        <section class="bce-completeness-card" aria-labelledby="bce-completeness-dist-title">
+            <div class="bce-completeness-card__head">
+                <h2 id="bce-completeness-dist-title" class="bce-completeness-card__title"><?= $block->escapeHtml(__('Score distribution')) ?></h2>
+                <span class="bce-completeness-muted"><?= $block->escapeHtml($dashboard->products((int)$summary['count'])) ?></span>
+            </div>
+            <ul class="bce-completeness-dist">
+                <?php foreach ($distribution as $row): ?>
+                    <li class="bce-completeness-dist__row">
+                        <?= /* @noEscape */ $chip($row['code']) ?>
+                        <span class="bce-completeness-dist__track">
+                            <span class="bce-completeness-dist__bar bce-completeness-dist__bar--<?= $block->escapeHtmlAttr($row['code']) ?>" style="width: <?= $block->escapeHtmlAttr($row['width']) ?>"></span>
+                            <span class="bce-completeness-dist__count"><strong><?= $block->escapeHtml($dashboard->formatNumber($row['count'])) ?></strong> · <?= $block->escapeHtml($row['pct']) ?></span>
+                        </span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <p class="bce-completeness-card__note"><?= $block->escapeHtml(__(
+                'Complete %1 · Good %2 · Needs work %3 · Poor %4. Thresholds are set in',
+                $dashboard->getBandRange('complete'),
+                $dashboard->getBandRange('good'),
+                $dashboard->getBandRange('needs_work'),
+                $dashboard->getBandRange('poor')
+            )) ?> <a href="<?= $block->escapeUrl($dashboard->getSettingsUrl()) ?>"><?= $block->escapeHtml(__('Settings')) ?></a>.</p>
+        </section>
+
+        <section class="bce-completeness-card" aria-labelledby="bce-completeness-breakdown-title">
+            <div class="bce-completeness-card__head bce-completeness-card__head--tight">
+                <h2 id="bce-completeness-breakdown-title" class="bce-completeness-card__title"><?= $block->escapeHtml(__('Breakdown')) ?></h2>
+                <div class="bce-completeness-segments" role="group" aria-label="<?= $block->escapeHtmlAttr(__('Break down by')) ?>">
+                    <?php foreach ($groupings as $code => $label): ?>
+                        <a class="bce-completeness-segments__item<?= $code === $by ? ' bce-completeness-segments__item--selected' : '' ?>" href="<?= $block->escapeUrl($dashboard->getBreakdownUrl($code)) ?>" aria-current="<?= $code === $by ? 'true' : 'false' ?>"><?= $block->escapeHtml($label) ?></a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <table class="bce-completeness-table" aria-label="<?= $block->escapeHtmlAttr(__('Breakdown by %1', $groupings[$by])) ?>">
+                <thead>
+                    <tr>
+                        <th scope="col"><?= $block->escapeHtml($groupings[$by]) ?></th>
+                        <th scope="col" class="bce-completeness-table__num"><?= $block->escapeHtml(__('Products')) ?></th>
+                        <th scope="col" aria-sort="ascending"><?= $block->escapeHtml(__('Avg score')) ?> <span aria-hidden="true">▲</span></th>
+                        <th scope="col" class="bce-completeness-table__bar"><span class="bce-completeness-visually-hidden"><?= $block->escapeHtml(__('Average score bar')) ?></span></th>
+                        <th scope="col" class="bce-completeness-table__num"><?= $block->escapeHtml(__('Complete')) ?></th>
+                        <th scope="col"><span class="bce-completeness-visually-hidden"><?= $block->escapeHtml(__('Action')) ?></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($breakdown as $row): ?>
+                        <tr>
+                            <td><?= $block->escapeHtml($row['name']) ?></td>
+                            <td class="bce-completeness-table__num"><?= $block->escapeHtml($dashboard->formatNumber((int)$row['products'])) ?></td>
+                            <td class="bce-completeness-table__avg"><strong><?= (int)$row['average'] ?></strong> <?php if ($row['band'] !== null): ?><?= /* @noEscape */ $chip($row['band']) ?><?php endif; ?></td>
+                            <td class="bce-completeness-table__bar"><span class="bce-completeness-bar" aria-hidden="true"><span class="bce-completeness-bar__fill bce-completeness-dist__bar--<?= $block->escapeHtmlAttr((string)$row['band']) ?>" style="width: <?= (int)$row['average'] ?>%"></span></span></td>
+                            <td class="bce-completeness-table__num"><?= $block->escapeHtml($row['complete_pct_label']) ?></td>
+                            <td class="bce-completeness-table__action"><a href="<?= $block->escapeUrl($row['url']) ?>"><?= $block->escapeHtml(__('View products')) ?></a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?php if (!$breakdown): ?>
+                        <tr><td colspan="6" class="bce-completeness-muted"><?= $block->escapeHtml(__('Nothing to break down yet.')) ?></td></tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            <p class="bce-completeness-card__note"><?= $block->escapeHtml($dashboard->getGroupingNote()) ?></p>
+        </section>
+    </div>
+
+    <section class="bce-completeness-card bce-completeness-cards__right" aria-labelledby="bce-completeness-missing-title">
+        <div class="bce-completeness-card__head">
+            <h2 id="bce-completeness-missing-title" class="bce-completeness-card__title"><?= $block->escapeHtml(__('Most-missing rules')) ?></h2>
+            <span class="bce-completeness-muted"><?= $block->escapeHtml($dashboard->topRulesLabel(count($mostMissing['items']), (int)$mostMissing['total_rules'])) ?></span>
+        </div>
+        <ol class="bce-completeness-missing">
+            <?php foreach ($mostMissing['items'] as $item): ?>
+                <li class="bce-completeness-missing__row">
+                    <span class="bce-completeness-missing__rank"><?= (int)$item['rank'] ?></span>
+                    <span class="bce-completeness-missing__text">
+                        <strong><?= $block->escapeHtml($item['label']) ?></strong>
+                        <span class="bce-completeness-muted"><?= $block->escapeHtml($item['description']) ?></span>
+                        <?php if ($dashboard->getFilter()->getRulesetId() === null && ($item['ruleset_name'] ?? '') !== ''): ?>
+                            <span class="bce-completeness-muted bce-completeness-missing__set"><?= $block->escapeHtml(__('Rule set: %1', $item['ruleset_name'])) ?></span>
+                        <?php endif; ?>
+                    </span>
+                    <?= /* @noEscape */ $weightChip((int)$item['weight'], (string)$item['weight_label']) ?>
+                    <span class="bce-completeness-missing__count">
+                        <span><strong><?= $block->escapeHtml($dashboard->formatNumber((int)$item['failing'])) ?></strong> <?= $block->escapeHtml(__('failing')) ?></span>
+                        <a href="<?= $block->escapeUrl($item['url']) ?>"><?= $block->escapeHtml(__('View products')) ?></a>
+                    </span>
+                </li>
+            <?php endforeach; ?>
+            <?php if (!$mostMissing['items']): ?>
+                <li class="bce-completeness-missing__row bce-completeness-muted"><?= $block->escapeHtml(__('No product fails a rule under these filters.')) ?></li>
+            <?php endif; ?>
+        </ol>
+    </section>
+</div>

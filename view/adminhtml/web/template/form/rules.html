@@ -1,0 +1,62 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<div class="bce-completeness-rules" data-bind="css: {'bce-completeness-form--readonly': disabled()}, attr: {'data-index': index}">
+    <div class="message message-error bce-completeness-rules__summary" role="alert" data-bind="attr: {hidden: summaryErrors().length ? null : 'hidden'}">
+        <strong data-bind="text: summaryHeadline()"></strong>
+        <div data-bind="foreach: summaryErrors">
+            <a href="#" data-bind="text: label, click: function () { $parent.focusRow(record, field); return false; }"></a>
+        </div>
+    </div>
+    <div class="admin__control-table-wrapper">
+        <table class="admin__dynamic-rows admin__control-table" data-role="grid" data-bind="attr: {'data-index': index}">
+            <thead>
+                <tr>
+                    <th if="dndConfig.enabled"></th>
+                    <th>
+                        <div class="bce-completeness-rules__grid bce-completeness-rules__header" data-bind="css: {'bce-completeness-rules__grid--role': hasRole()}">
+                            <!-- ko if: hasRole() --><span data-bind="i18n: 'Role'"></span><!-- /ko -->
+                            <span data-bind="i18n: 'Attribute'"></span>
+                            <span data-bind="i18n: 'Rule'"></span>
+                            <span data-bind="i18n: 'Parameter'"></span>
+                            <span data-bind="i18n: 'Weight'"></span>
+                            <span class="bce-completeness-rules__share" data-bind="i18n: 'Share'"></span>
+                            <span><span class="bce-completeness-visually-hidden" data-bind="i18n: 'Remove'"></span></span>
+                            <!-- ko if: hasRole() --><span class="bce-completeness-rules__sub"></span><!-- /ko -->
+                            <span class="bce-completeness-rules__sub" data-bind="i18n: 'Code'"></span>
+                            <span class="bce-completeness-rules__sub bce-completeness-rules__line2" data-bind="i18n: 'Applies to product types'"></span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: {data: elems, as: '$record'}">
+                <!-- ko template: $record.template --><!-- /ko -->
+            </tbody>
+        </table>
+        <!-- ko ifnot: elems().length -->
+        <div class="bce-completeness-rules__empty">
+            <strong data-bind="i18n: 'No rules yet'"></strong>
+            <span data-bind="i18n: 'Add rules one at a time with Add rule, or pick a suggestion from the list beside the table. The attribute of every rule is yours to choose.'"></span>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: elems().length -->
+        <div class="bce-completeness-rules__footer">
+            <span data-bind="text: footerSentence()"></span>
+            <strong data-bind="i18n: 'Total'"></strong>
+            <span class="bce-completeness-rules__total">100 %</span>
+            <span></span>
+        </div>
+        <!-- /ko -->
+    </div>
+    <!-- ko ifnot: disabled() -->
+    <div class="bce-completeness-rules__actions">
+        <button type="button" class="action-secondary" data-bind="click: function () { addRow({}); }, attr: {'data-action': 'add_new_row'}">
+            <span>+ <span data-bind="i18n: 'Add rule'"></span></span>
+        </button>
+        <span data-bind="i18n: 'Weights: Required counts 3, Important 2, Nice to have 1. Share = the rule\'s count ÷ the total.'"></span>
+    </div>
+    <!-- /ko -->
+</div>

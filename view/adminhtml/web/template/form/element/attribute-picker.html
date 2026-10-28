@@ -1,0 +1,40 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<div class="bce-completeness-picker" data-bind="css: {'_open': open(), '_warning': missingSets().length > 0, '_disabled': disabled()}, event: {keydown: onKey, mousedown: onPress, focusin: onFocusIn, focusout: onFocusOut}">
+    <input type="hidden" data-bind="value: value, attr: {name: inputName, id: uid}">
+    <button type="button" class="bce-completeness-picker__toggle" data-bind="click: toggle, attr: {'aria-expanded': open() ? 'true' : 'false', 'aria-haspopup': 'listbox', 'aria-controls': open() ? uid + '-listbox' : null, id: uid + '-toggle', 'aria-describedby': noticeId}, disable: disabled">
+        <span class="bce-completeness-picker__label" data-bind="text: displayLabel(), css: {'bce-completeness-muted': !value()}"></span>
+        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2.5 4.5L6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6"></path></svg>
+    </button>
+    <div class="bce-completeness-picker__code-line">
+        <code class="bce-completeness-code" data-bind="text: displayCode()"></code>
+        <!-- ko if: warningBadge() -->
+        <span class="bce-completeness-badge bce-completeness-badge--warning" data-bind="text: warningBadge()"></span>
+        <!-- /ko -->
+    </div>
+    <!-- ko if: open() -->
+    <div class="bce-completeness-picker__menu">
+        <div class="bce-completeness-picker__search">
+            <input type="search" class="admin__control-text" autocomplete="off" data-bind="value: filterText, valueUpdate: 'input', attr: {id: uid + '-search', role: 'combobox', 'aria-expanded': 'true', 'aria-controls': uid + '-listbox', 'aria-autocomplete': 'list', 'aria-activedescendant': activeId(), placeholder: $t('Search by label or code'), 'aria-label': $t('Search attributes by label or code')}">
+        </div>
+        <ul class="bce-completeness-picker__options" role="listbox" tabindex="-1" data-bind="attr: {id: uid + '-listbox', 'aria-label': label}, foreach: filtered">
+            <li role="option"
+                data-bind="click: function () { $parent.choose($data); },
+                           attr: {id: $parent.optionId($index()), 'aria-selected': $parent.active() === $index() ? 'true' : 'false'},
+                           css: {'_selected': $parent.value() === code},
+                           style: {outline: $parent.active() === $index() ? '2px solid #006bb4' : '', outlineOffset: $parent.active() === $index() ? '-2px' : ''}">
+                <span class="bce-completeness-picker__check" aria-hidden="true" data-bind="text: $parent.value() === code ? '✓' : ''"></span>
+                <span class="bce-completeness-picker__option-label"><span data-bind="text: label"></span> <code class="bce-completeness-code" data-bind="text: code"></code></span>
+                <span class="bce-completeness-picker__sets" data-bind="text: $parent.setsNote($data), css: {'_partial': $parent.isPartial($data)}"></span>
+            </li>
+        </ul>
+        <!-- ko ifnot: filtered().length -->
+        <div class="bce-completeness-picker__none bce-completeness-muted" data-bind="i18n: 'No attribute matches.'"></div>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+</div>

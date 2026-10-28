@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.product_panel" template="BigCartEnergy_CatalogCompleteness::preview/product.phtml" after="-">
+                <arguments>
+                    <argument name="panel" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\ProductPanel</argument>
+                    <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

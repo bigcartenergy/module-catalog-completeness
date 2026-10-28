@@ -1,0 +1,38 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<div class="bce-completeness-missing-cell"
+     tabindex="0"
+     data-bind="
+        event: {
+            mouseenter: function () { $col.open($row()); },
+            mouseleave: function () { $col.close(); },
+            focus: function () { $col.open($row()); },
+            blur: function () { $col.close(); },
+            keydown: function (data, event) { if (event.key === 'Escape') { $col.close(); } return true; }
+        },
+        attr: {'aria-describedby': $col.isOpen($row()) ? 'bce-missing-popover-' + $row()._rowIndex : null}">
+    <!-- ko foreach: $col.getTags($row()) -->
+    <span class="bce-completeness-tag" data-bind="text: $data"></span>
+    <!-- /ko -->
+    <!-- ko if: $col.getMore($row()) -->
+    <span class="bce-completeness-tag-more" data-bind="text: $col.getMore($row())"></span>
+    <!-- /ko -->
+    <!-- ko ifnot: $col.getCount($row()) || $row().coverage -->
+    <span class="bce-completeness-muted" data-bind="i18n: 'Nothing missing'"></span>
+    <!-- /ko -->
+    <!-- ko if: $col.isOpen($row()) -->
+    <div class="bce-completeness-popover" role="tooltip" data-bind="attr: {id: 'bce-missing-popover-' + $row()._rowIndex}">
+        <strong data-bind="text: $col.getPopoverTitle($row())"></strong>
+        <ul class="bce-completeness-popover__list" data-bind="foreach: $col.getAll($row())">
+            <li>
+                <span data-bind="text: rule"></span>
+                <span class="bce-completeness-muted" data-bind="text: weight"></span>
+            </li>
+        </ul>
+    </div>
+    <!-- /ko -->
+</div>

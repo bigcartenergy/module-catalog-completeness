@@ -1,0 +1,115 @@
+{
+    "bce_completeness_ruleset": {
+        "column": {
+            "ruleset_id": true,
+            "name": true,
+            "kind": true,
+            "channel_code": true,
+            "description": true,
+            "is_enabled": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "BCE_CMPL_RULESET_KIND_IS_ENABLED": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "bce_completeness_ruleset_attribute_set": {
+        "column": {
+            "ruleset_id": true,
+            "attribute_set_id": true
+        },
+        "index": {
+            "BCE_CMPL_RS_ATTR_SET_ATTRIBUTE_SET_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BCE_CMPL_RS_ATTR_SET_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID": true,
+            "BCE_CMPL_RS_ATTR_SET_ATTR_SET_ID_EAV_ATTR_SET_ATTR_SET_ID": true
+        }
+    },
+    "bce_completeness_rule": {
+        "column": {
+            "rule_id": true,
+            "ruleset_id": true,
+            "sort_order": true,
+            "role": true,
+            "attribute_code": true,
+            "rule_type": true,
+            "parameter": true,
+            "weight": true,
+            "applies_to": true
+        },
+        "index": {
+            "BCE_CMPL_RULE_RULESET_ID_SORT_ORDER": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BCE_CMPL_RULE_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID": true
+        }
+    },
+    "bce_completeness_score": {
+        "column": {
+            "score_id": true,
+            "product_id": true,
+            "ruleset_id": true,
+            "is_primary": true,
+            "score": true,
+            "passed_weight": true,
+            "total_weight": true,
+            "missing": true,
+            "scored_at": true
+        },
+        "index": {
+            "BCE_CMPL_SCORE_RULESET_ID_SCORE": true,
+            "BCE_CMPL_SCORE_IS_PRIMARY_SCORE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BCE_CMPL_SCORE_PRODUCT_ID_RULESET_ID": true,
+            "BCE_CMPL_SCORE_PRODUCT_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "BCE_CMPL_SCORE_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID": true
+        }
+    },
+    "bce_completeness_failure": {
+        "column": {
+            "product_id": true,
+            "ruleset_id": true,
+            "rule_id": true
+        },
+        "index": {
+            "BCE_CMPL_FAILURE_RULESET_ID_RULE_ID": true,
+            "BCE_CMPL_FAILURE_RULE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BCE_CMPL_FAILURE_PRODUCT_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "BCE_CMPL_FAILURE_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID": true,
+            "BCE_CMPL_FAILURE_RULE_ID_BCE_CMPL_RULE_RULE_ID": true
+        }
+    },
+    "bce_completeness_run": {
+        "column": {
+            "run_id": true,
+            "ruleset_id": true,
+            "product_ids": true,
+            "state": true,
+            "total": true,
+            "done": true,
+            "message": true,
+            "created_at": true,
+            "started_at": true,
+            "finished_at": true
+        },
+        "index": {
+            "BCE_CMPL_RUN_STATE_RUN_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BCE_CMPL_RUN_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID": true
+        }
+    }
+}

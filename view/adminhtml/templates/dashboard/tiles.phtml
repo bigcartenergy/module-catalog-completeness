@@ -1,0 +1,98 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard $dashboard */
+$dashboard = $block->getData('dashboard');
+$filterClass = \BigCartEnergy\CatalogCompleteness\Model\Dashboard\Filter::class;
+$bandClass = \BigCartEnergy\CatalogCompleteness\Model\Band\Resolver::class;
+$summary = $dashboard->getSummary();
+$count = (int)$summary['count'];
+$average = $summary['average'];
+$averageBand = $dashboard->getBandOf($average);
+$bands = $summary['bands'];
+$needsOrPoor = (int)$bands[$bandClass::NEEDS_WORK] + (int)$bands[$bandClass::POOR];
+$mostMissing = $dashboard->getMostMissing();
+$topRule = $mostMissing['items'][0] ?? null;
+$pct = function (int $part) use ($count, $dashboard): string {
+    return $count > 0 ? $dashboard->formatPercent(100 * $part / $count) : '0 %';
+};
+$chip = function (string $code) use ($dashboard, $block): string {
+    return '<span class="bce-completeness-chip bce-completeness-chip--' . $block->escapeHtmlAttr($code) . '">'
+        . '<svg class="bce-completeness-chip__icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#bce-completeness-icon-' . $block->escapeHtmlAttr($code) . '"></use></svg>'
+        . '<span>' . $block->escapeHtml($dashboard->getBandLabel($code)) . '</span></span>';
+};
+// A tile is a button (Space and Enter both work) that opens the dashboard filtered by what it shows; its last
+// line names the filter, or says that it is active.
+$tileOpen = function (string $tile, string $url, ?int $ruleId = null) use ($dashboard, $block): string {
+    return '<button type="button" class="bce-completeness-tile" data-bce-href="' . $block->escapeUrl($url) . '"'
+        . ' aria-pressed="' . ($dashboard->isTilePressed($tile) ? 'true' : 'false') . '">';
+};
+$tileFooter = function (string $tile, string $label) use ($dashboard, $block): string {
+    return '<span class="bce-completeness-tile__footer">'
+        . $block->escapeHtml($dashboard->isTilePressed($tile) ? __('✓ Filtering · click to clear') : $label) . '</span>';
+};
+?>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+        <path id="bce-completeness-icon-complete" fill="currentColor" fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM6.9 10.9L4 8l1.1-1.1 1.8 1.8 4-4L12 5.8z"></path>
+        <path id="bce-completeness-icon-good" fill="currentColor" fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 1.6a5.4 5.4 0 1 1 0 10.8A5.4 5.4 0 0 1 8 2.6zM7.1 10.5L4.6 8l1-1 1.5 1.5 3.3-3.3 1 1z"></path>
+        <path id="bce-completeness-icon-needs_work" fill="currentColor" fill-rule="evenodd" d="M8 1.2l7.2 13.1H.8zM7.2 5.6h1.6v4.6H7.2zm0 5.8h1.6V13H7.2z"></path>
+        <path id="bce-completeness-icon-poor" fill="currentColor" fill-rule="evenodd" d="M3.5 2h9A1.5 1.5 0 0 1 14 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-9A1.5 1.5 0 0 1 3.5 2zM5.2 4.1L8 6.9l2.8-2.8 1.1 1.1L9.1 8l2.8 2.8-1.1 1.1L8 9.1l-2.8 2.8-1.1-1.1L6.9 8 4.1 5.2z"></path>
+    </defs>
+</svg>
+<section class="bce-completeness-tiles" aria-label="<?= $block->escapeHtmlAttr(__('Summary')) ?>">
+    <?= /* @noEscape */ $tileOpen($filterClass::TILE_BELOW_AVERAGE, $dashboard->getTileUrl($filterClass::TILE_BELOW_AVERAGE)) ?>
+        <span class="bce-completeness-tile__label"><?= $block->escapeHtml(__('Average score')) ?></span>
+        <span class="bce-completeness-tile__value">
+            <span class="bce-completeness-tile__number"><?= $average === null ? '–' : (int)$average ?></span>
+            <?php if ($averageBand !== null): ?><?= /* @noEscape */ $chip($averageBand) ?><?php endif; ?>
+        </span>
+        <span class="bce-completeness-tile__sub"><?= $block->escapeHtml(__('Out of 100')) ?></span>
+        <?= /* @noEscape */ $tileFooter($filterClass::TILE_BELOW_AVERAGE, (string)__('View below average')) ?>
+    </button>
+    <?= /* @noEscape */ $tileOpen($filterClass::TILE_ALL, $dashboard->getTileUrl($filterClass::TILE_ALL)) ?>
+        <span class="bce-completeness-tile__label"><?= $block->escapeHtml(__('Products scored')) ?></span>
+        <span class="bce-completeness-tile__value"><span class="bce-completeness-tile__number"><?= $block->escapeHtml($dashboard->formatNumber($count)) ?></span></span>
+        <span class="bce-completeness-tile__sub"><?= $block->escapeHtml($dashboard->getFilter()->isEnabledOnly()
+            ? ((int)$summary['disabled'] === 1
+                ? __('1 disabled product not counted')
+                : __('%1 disabled products not counted', $dashboard->formatNumber((int)$summary['disabled'])))
+            : __('Enabled and disabled products')) ?></span>
+        <?= /* @noEscape */ $tileFooter($filterClass::TILE_ALL, (string)__('View all')) ?>
+    </button>
+    <?= /* @noEscape */ $tileOpen($filterClass::TILE_COMPLETE, $dashboard->getTileUrl($filterClass::TILE_COMPLETE)) ?>
+        <span class="bce-completeness-tile__label"><?= /* @noEscape */ $chip($bandClass::COMPLETE) ?></span>
+        <span class="bce-completeness-tile__value"><span class="bce-completeness-tile__number"><?= $block->escapeHtml($dashboard->formatNumber((int)$bands[$bandClass::COMPLETE])) ?></span></span>
+        <span class="bce-completeness-tile__sub"><?= $block->escapeHtml(__('%1 of scored products', $pct((int)$bands[$bandClass::COMPLETE]))) ?></span>
+        <?= /* @noEscape */ $tileFooter($filterClass::TILE_COMPLETE, (string)__('View complete')) ?>
+    </button>
+    <?= /* @noEscape */ $tileOpen($filterClass::TILE_NEEDS_WORK_OR_POOR, $dashboard->getTileUrl($filterClass::TILE_NEEDS_WORK_OR_POOR)) ?>
+        <span class="bce-completeness-tile__label bce-completeness-tile__label--pair"><?= /* @noEscape */ $chip($bandClass::NEEDS_WORK) ?><span><?= $block->escapeHtml(__('or')) ?></span><?= /* @noEscape */ $chip($bandClass::POOR) ?></span>
+        <span class="bce-completeness-tile__value"><span class="bce-completeness-tile__number"><?= $block->escapeHtml($dashboard->formatNumber($needsOrPoor)) ?></span></span>
+        <span class="bce-completeness-tile__sub"><?= $block->escapeHtml(__(
+            '%1 · %2 needs work, %3 poor',
+            $pct($needsOrPoor),
+            $dashboard->formatNumber((int)$bands[$bandClass::NEEDS_WORK]),
+            $dashboard->formatNumber((int)$bands[$bandClass::POOR])
+        )) ?></span>
+        <?= /* @noEscape */ $tileFooter($filterClass::TILE_NEEDS_WORK_OR_POOR, (string)__('View these products')) ?>
+    </button>
+    <?php if ($topRule !== null): ?>
+        <?= /* @noEscape */ $tileOpen($filterClass::TILE_FAILING, $dashboard->getTileUrl($filterClass::TILE_FAILING, (int)$topRule['rule_id'])) ?>
+            <span class="bce-completeness-tile__label"><?= $block->escapeHtml(__('Rule failing most')) ?></span>
+            <span class="bce-completeness-tile__value bce-completeness-tile__value--text"><?= $block->escapeHtml($topRule['description']) ?></span>
+            <span class="bce-completeness-tile__sub"><?= $block->escapeHtml(__('%1 · %2', $dashboard->products((int)$topRule['failing']), $topRule['weight_label'])) ?></span>
+            <?= /* @noEscape */ $tileFooter($filterClass::TILE_FAILING, (string)__('View failing products')) ?>
+        </button>
+    <?php else: ?>
+        <div class="bce-completeness-tile bce-completeness-tile--static">
+            <span class="bce-completeness-tile__label"><?= $block->escapeHtml(__('Rule failing most')) ?></span>
+            <span class="bce-completeness-tile__value bce-completeness-tile__value--text"><?= $block->escapeHtml(__('No rule fails')) ?></span>
+            <span class="bce-completeness-tile__sub"><?= $block->escapeHtml(__('Every scored product passes every rule.')) ?></span>
+        </div>
+    <?php endif; ?>
+</section>

@@ -1,0 +1,15 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard $dashboard */
+$dashboard = $block->getData('dashboard');
+?>
+<?php if ($dashboard->canEditRuleSets()): ?>
+<div class="bce-completeness-actions bce-completeness-actions--list">
+    <a class="action-default scalable primary bce-completeness-actions__button" href="<?= $block->escapeUrl($dashboard->getNewRuleSetUrl()) ?>" data-ui-id="add-button"><span><?= $block->escapeHtml(__('Create a rule set')) ?></span></a>
+</div>
+<?php endif; ?>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">bce_completeness_ruleset_listing.bce_completeness_ruleset_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>bce_completeness_ruleset_columns</spinner>
+        <deps>
+            <dep>bce_completeness_ruleset_listing.bce_completeness_ruleset_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="bce_completeness_ruleset_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">ruleset_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>BigCartEnergy_CatalogCompleteness::rulesets</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="bce_completeness_ruleset_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>ruleset_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="bce_completeness_ruleset_columns">
+        <column name="ruleset_id" sortOrder="10">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="name" sortOrder="20">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Name</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="kind" component="Magento_Ui/js/grid/columns/select" sortOrder="30">
+            <settings>
+                <filter>select</filter>
+                <options class="BigCartEnergy\CatalogCompleteness\Model\Source\Kind"/>
+                <dataType>select</dataType>
+                <label translate="true">Kind</label>
+            </settings>
+        </column>
+        <column name="scope" class="BigCartEnergy\CatalogCompleteness\Ui\Component\Listing\Column\RuleSetScope" sortOrder="40">
+            <settings>
+                <label translate="true">Attribute sets or channel</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="rules_count" sortOrder="50">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Rules</label>
+            </settings>
+        </column>
+        <column name="is_enabled" component="Magento_Ui/js/grid/columns/select" sortOrder="60">
+            <settings>
+                <filter>select</filter>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <dataType>select</dataType>
+                <label translate="true">Enabled</label>
+            </settings>
+        </column>
+        <column name="products_covered" sortOrder="70">
+            <settings>
+                <label translate="true">Products covered</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="80">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Updated</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="BigCartEnergy\CatalogCompleteness\Ui\Component\Listing\Column\RuleSetActions" sortOrder="90">
+            <settings>
+                <indexField>ruleset_id</indexField>
+                <label translate="true">Actions</label>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

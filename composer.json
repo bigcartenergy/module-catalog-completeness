@@ -1,0 +1,59 @@
+{
+    "name": "bigcartenergy/module-catalog-completeness",
+    "description": "Catalog Completeness by Big Cart Energy, a free PIM module for Magento Open Source: completeness scoring with weighted rules per attribute set, channel-readiness profiles with hints for the major channels, a dashboard with a work list and CSV export, kept current by an indexer and a periodic rescore. It syndicates no feeds and holds no product data outside Magento.",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "homepage": "https://bigcartenergy.com",
+    "authors": [
+        {
+            "name": "Big Cart Energy",
+            "email": "hello@bigcartenergy.com"
+        }
+    ],
+    "keywords": [
+        "magento2",
+        "magento 2",
+        "pim",
+        "product information management",
+        "catalog",
+        "completeness",
+        "product data quality",
+        "google merchant center",
+        "product feed"
+    ],
+    "require": {
+        "php": "~7.1.3 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "bigcartenergy/module-core": "^1.0",
+        "magento/framework": "^102.0 || ^103.0",
+        "magento/framework-message-queue": "^100.3",
+        "magento/module-backend": "^101.0 || ^102.0",
+        "magento/module-catalog": "^103.0 || ^104.0",
+        "magento/module-catalog-inventory": "^100.3",
+        "magento/module-config": "^101.1",
+        "magento/module-cron": "^100.3",
+        "magento/module-eav": "^102.0",
+        "magento/module-indexer": "^100.3",
+        "magento/module-mysql-mq": "^100.3",
+        "magento/module-store": "^101.0",
+        "magento/module-ui": "^101.1",
+        "magento/module-webapi": "^100.3"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "BigCartEnergy\\CatalogCompleteness\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "support": {
+        "email": "hello@bigcartenergy.com",
+        "issues": "https://github.com/bigcartenergy/module-catalog-completeness/issues",
+        "source": "https://github.com/bigcartenergy/module-catalog-completeness"
+    }
+}

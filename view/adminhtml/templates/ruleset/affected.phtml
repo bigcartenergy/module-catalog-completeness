@@ -1,0 +1,18 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Editor $editor */
+$editor = $block->getData('editor');
+?>
+<div class="bce-completeness-affected" data-role="bce-affected-box">
+    <span class="bce-completeness-overline"><?= $block->escapeHtml(__('Affected products')) ?></span>
+    <span data-role="bce-affected-known"<?= $editor->isNew() ? ' hidden' : '' ?>>
+        <a href="<?= $block->escapeUrl($editor->getDashboardUrl()) ?>" class="bce-completeness-affected__link" data-role="bce-affected-link"><?= $block->escapeHtml($editor->getAffectedLabel()) ?></a>
+        <span class="bce-completeness-muted"><?= $block->escapeHtml(__('Opens the dashboard filtered to this rule set.')) ?></span>
+    </span>
+    <span class="bce-completeness-muted" data-role="bce-affected-unknown"<?= $editor->isNew() ? '' : ' hidden' ?>><?= $block->escapeHtml(__('Choose attribute sets to see which products this rule set covers.')) ?></span>
+</div>

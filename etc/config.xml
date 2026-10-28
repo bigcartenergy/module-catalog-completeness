@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <bce_completeness>
+            <general>
+                <brand_attribute>manufacturer</brand_attribute>
+                <enabled_only_default>1</enabled_only_default>
+                <worklist_page_size>20</worklist_page_size>
+                <csv_row_cap>50000</csv_row_cap>
+            </general>
+            <thresholds>
+                <good_from>80</good_from>
+                <needs_work_from>50</needs_work_from>
+            </thresholds>
+            <rescore>
+                <enabled>1</enabled>
+                <schedule>0 */6 * * *</schedule>
+                <mode>full</mode>
+                <batch_size>500</batch_size>
+            </rescore>
+        </bce_completeness>
+    </default>
+</config>

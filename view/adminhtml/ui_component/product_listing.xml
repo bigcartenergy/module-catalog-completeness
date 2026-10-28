@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="product_columns" class="Magento\Catalog\Ui\Component\Listing\Columns">
+        <column name="bce_completeness_score" class="BigCartEnergy\CatalogCompleteness\Ui\Component\Listing\Column\Score" component="BigCartEnergy_CatalogCompleteness/js/grid/columns/score" sortOrder="85">
+            <settings>
+                <addField>true</addField>
+                <filter>textRange</filter>
+                <label translate="true">Completeness</label>
+                <bodyTmpl>BigCartEnergy_CatalogCompleteness/grid/cells/score</bodyTmpl>
+                <sortable>true</sortable>
+            </settings>
+        </column>
+    </columns>
+</listing>

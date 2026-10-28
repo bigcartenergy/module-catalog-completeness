@@ -1,0 +1,79 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard $dashboard */
+/** @var \BigCartEnergy\Core\ViewModel\Brand $brand */
+$dashboard = $block->getData('dashboard');
+$brand = $block->getData('brand');
+$status = $dashboard->getStatus();
+$reader = \BigCartEnergy\CatalogCompleteness\Model\Dashboard\StatusReader::class;
+$run = is_array($status['run']) ? $status['run'] : [];
+$failed = is_array($status['failed']) ? $status['failed'] : [];
+$scoredAt = $status['scored_at_formatted'];
+?>
+<div class="bce-completeness-status" data-role="bce-status">
+    <div class="bce-completeness-status__line">
+        <div class="bce-completeness-status__text" data-role="bce-status-text" data-state="<?= $block->escapeHtmlAttr($status['state']) ?>">
+            <?php if ($status['state'] === $reader::STATE_OK): ?>
+                <svg class="bce-completeness-status__icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 4.5V8l2.5 1.6" fill="none" stroke="currentColor" stroke-width="1.4"></path></svg>
+                <span><?= $block->escapeHtml(__('Scores as of %1 · %2', $scoredAt, $status['mode_label'])) ?></span>
+            <?php endif; ?>
+        </div>
+        <span class="bce-brand-lockup bce-completeness-lockup">
+            <?= /* @noEscape */ $brand->getMarkSvg(16) ?>
+            <span><?= $block->escapeHtml(__('by')) ?> <a href="<?= $block->escapeUrl($brand->getSiteUrl()) ?>" target="_blank" rel="noopener"><?= $block->escapeHtml($brand->getName()) ?></a></span>
+        </span>
+    </div>
+
+    <div class="message message-warning bce-completeness-status__message" role="status" data-role="bce-status-recalc"<?= $status['state'] === $reader::STATE_RECALCULATING ? '' : ' hidden' ?>>
+        <div>
+            <strong data-role="bce-recalc-headline"><?= $block->escapeHtml(__(
+                'Recalculating scores: %1 of %2 products done (%3 %).',
+                $dashboard->formatNumber((int)($run['done'] ?? 0)),
+                $dashboard->formatNumber((int)($run['total'] ?? 0)),
+                (int)($run['percent'] ?? 0)
+            )) ?></strong>
+            <span data-role="bce-recalc-detail"><?= $block->escapeHtml($scoredAt !== ''
+                ? __('The numbers below are from %1 until this finishes. You can leave this page.', $scoredAt)
+                : __('The numbers below update when this finishes. You can leave this page.')) ?></span>
+            <span data-role="bce-recalc-waiting"<?= !empty($run['waiting']) ? '' : ' hidden' ?>><?= $block->escapeHtml(__('The queue consumer has not picked this run up yet. Make sure cron runs, or run bin/magento bce:completeness:recalculate.')) ?></span>
+        </div>
+        <div class="bce-completeness-progress" role="progressbar" aria-label="<?= $block->escapeHtmlAttr(__('Recalculation progress')) ?>" aria-valuemin="0" aria-valuemax="<?= (int)($run['total'] ?? 0) ?>" aria-valuenow="<?= (int)($run['done'] ?? 0) ?>" data-role="bce-recalc-bar">
+            <div class="bce-completeness-progress__fill" style="width: <?= (int)($run['percent'] ?? 0) ?>%" data-role="bce-recalc-fill"></div>
+        </div>
+    </div>
+
+    <div class="message message-warning bce-completeness-status__message" role="status" data-role="bce-status-stale"<?= $status['state'] === $reader::STATE_STALE ? '' : ' hidden' ?>>
+        <div>
+            <strong><?= $block->escapeHtml(__('Scores are out of date')) ?></strong>
+            <span><?= $block->escapeHtml(__('Rules changed after the last calculation, so the completeness index is marked as needing a reindex. Scores as of %1 · %2.', $scoredAt, $status['mode_label'])) ?></span>
+        </div>
+        <?php if ($dashboard->canRecalculate()): ?>
+            <button type="button" class="action-secondary" data-role="bce-recalculate-now"><span><?= $block->escapeHtml(__('Recalculate now')) ?></span></button>
+        <?php endif; ?>
+    </div>
+
+    <div class="message message-error bce-completeness-status__message" role="alert" data-role="bce-status-error"<?= $status['state'] === $reader::STATE_ERROR ? '' : ' hidden' ?>>
+        <div>
+            <strong><?= $block->escapeHtml(__('The last recalculation failed')) ?></strong>
+            <span data-role="bce-error-detail"><?= $block->escapeHtml(__(
+                'It stopped at %1 of %2 products on %3. The scores below are from the last complete run, %4.',
+                $dashboard->formatNumber((int)($failed['done'] ?? 0)),
+                $dashboard->formatNumber((int)($failed['total'] ?? 0)),
+                (string)($failed['finished_at'] ?? ''),
+                $scoredAt
+            )) ?></span>
+            <span class="bce-completeness-status__code-line"><?= $block->escapeHtml(__('Indexer message:')) ?> <code data-role="bce-error-message"><?= $block->escapeHtml((string)($failed['message'] ?? '')) ?></code></span>
+            <span class="bce-completeness-status__actions">
+                <?php if ($dashboard->canRecalculate()): ?>
+                    <button type="button" class="action-secondary" data-role="bce-recalculate-retry"><span><?= $block->escapeHtml(__('Try again')) ?></span></button>
+                <?php endif; ?>
+                <a href="<?= $block->escapeUrl($dashboard->getIndexManagementUrl()) ?>"><?= $block->escapeHtml(__('Open Index Management')) ?></a>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Editor $editor */
+/** @var \BigCartEnergy\Core\ViewModel\Brand $brand */
+$editor = $block->getData('editor');
+$brand = $block->getData('brand');
+?>
+<div class="bce-completeness-editor-hint" data-role="bce-editor-hint">
+    <span class="bce-completeness-editor-hint__unsaved" data-role="bce-unsaved-flag" hidden>
+        <span aria-hidden="true">●</span> <?= $block->escapeHtml(__('Unsaved changes')) ?> <span aria-hidden="true">·</span>
+    </span>
+    <?php if (!$editor->canEdit()): ?>
+        <span class="bce-completeness-editor-hint__readonly"><?= $block->escapeHtml(__('View only')) ?></span>
+    <?php else: ?>
+        <span data-role="bce-affected-hint"><?= $block->escapeHtml($editor->isNew()
+            ? __('Choose attribute sets to see how many products will be rescored.')
+            : __('Save and recalculate rescores %1.', $editor->products($editor->getAffectedCount()))) ?></span>
+    <?php endif; ?>
+    <span class="bce-brand-lockup bce-completeness-lockup bce-completeness-editor-hint__brand">
+        <?= /* @noEscape */ $brand->getMarkSvg(16) ?>
+        <span><?= $block->escapeHtml(__('by')) ?> <a href="<?= $block->escapeUrl($brand->getSiteUrl()) ?>" target="_blank" rel="noopener"><?= $block->escapeHtml($brand->getName()) ?></a></span>
+    </span>
+</div>

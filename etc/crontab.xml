@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="bce_completeness">
+        <job name="bce_completeness_rescore" instance="BigCartEnergy\CatalogCompleteness\Cron\Rescore" method="execute">
+            <config_path>bce_completeness/rescore/schedule</config_path>
+        </job>
+    </group>
+</config>

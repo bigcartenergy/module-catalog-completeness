@@ -1,0 +1,165 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<div class="bce-completeness-panel" data-bind="css: {'bce-completeness-panel--collapsed': collapsed(), 'bce-completeness-panel--product': isProduct()}">
+    <!-- ko if: isProduct() && collapsed() -->
+    <div class="bce-completeness-panel__collapsed">
+        <div class="bce-completeness-panel__collapsed-text">
+            <div class="bce-completeness-panel__title-line">
+                <!-- ko if: markSvg --><span class="bce-completeness-panel__mark" data-bind="html: markSvg"></span><!-- /ko -->
+                <strong data-bind="i18n: 'Catalog completeness'"></strong>
+                <span class="bce-completeness-muted" data-bind="text: '· ' + currentRuleSetName()"></span>
+            </div>
+            <!-- ko if: result() -->
+            <div class="bce-completeness-panel__chip-line">
+                <strong data-bind="text: result().score === null ? '–' : result().score"></strong>
+                <span data-bind="css: bandClass()">
+                    <svg class="bce-completeness-chip__icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path data-bind="attr: {d: bandIcon()}" fill="currentColor" fill-rule="evenodd"></path></svg>
+                    <span data-bind="text: result().band_label"></span>
+                </span>
+                <span data-bind="text: $t('%1 missing').replace('%1', result().missing_count)"></span>
+            </div>
+            <!-- /ko -->
+        </div>
+        <button type="button" class="bce-completeness-panel__toggle" aria-expanded="false" data-bind="click: toggle, attr: {'aria-label': $t('Show completeness details')}">
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2.5 4.5L6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6"></path></svg>
+        </button>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko ifnot: isProduct() && collapsed() -->
+    <!-- ko if: isProduct() -->
+    <div class="bce-completeness-panel__header">
+        <div class="bce-completeness-panel__title-line">
+            <!-- ko if: markSvg --><span class="bce-completeness-panel__mark" data-bind="html: markSvg"></span><!-- /ko -->
+            <h3 class="bce-completeness-panel__title" data-bind="i18n: 'Catalog completeness'"></h3>
+            <button type="button" class="bce-completeness-panel__toggle" aria-expanded="true" data-bind="click: toggle, attr: {'aria-label': $t('Collapse completeness details')}">
+                <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2.5 7.5L6 4l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6"></path></svg>
+            </button>
+        </div>
+        <div class="bce-completeness-panel__select">
+            <label class="bce-completeness-panel__label" data-bind="attr: {for: 'bce-panel-ruleset-' + index}, i18n: 'Rule set'"></label>
+            <select class="admin__control-select" data-bind="attr: {id: 'bce-panel-ruleset-' + index}, options: ruleSets(), optionsText: 'name', optionsValue: function (set) { return String(set.id); }, value: rulesetId"></select>
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: isEditor() -->
+    <div class="bce-completeness-panel__header">
+        <div class="bce-completeness-panel__title-line">
+            <h3 class="bce-completeness-panel__title" data-bind="i18n: 'Preview on a product'"></h3>
+            <!-- ko if: unsaved() -->
+            <span class="bce-completeness-panel__unsaved"><span aria-hidden="true">●</span> <span data-bind="i18n: 'Includes unsaved changes'"></span></span>
+            <!-- /ko -->
+        </div>
+        <div class="bce-completeness-panel__search">
+            <input type="search" class="admin__control-text" data-bind="value: query, valueUpdate: 'input', attr: {placeholder: $t('Search by SKU or name'), 'aria-label': $t('Search products by SKU or name')}, disable: state() === 'norules'">
+            <!-- ko if: results().length -->
+            <ul class="bce-completeness-panel__results" role="listbox" data-bind="foreach: results">
+                <li role="option" tabindex="0" data-bind="click: function () { $parent.pick($data); }, keydown: function (data, event) { if (event.key === 'Enter') { $parent.pick(data); } return true; }">
+                    <strong data-bind="text: name || sku"></strong>
+                    <span class="bce-completeness-muted" data-bind="text: sku + ' · ' + attribute_set_name + ' · ' + type_label"></span>
+                </li>
+            </ul>
+            <!-- /ko -->
+        </div>
+        <!-- ko if: product() && state() !== 'norules' -->
+        <div class="bce-completeness-panel__product">
+            <div class="bce-completeness-panel__product-text">
+                <strong data-bind="text: product().name || product().sku"></strong>
+                <span class="bce-completeness-muted" data-bind="text: product().sku"></span>
+                <span class="bce-completeness-muted" data-bind="text: (product().attribute_set_name || '') + ' · ' + (product().type_label || '')"></span>
+            </div>
+            <button type="button" class="bce-completeness-panel__clear" data-bind="click: clear, attr: {'aria-label': $t('Clear product')}">&times;</button>
+        </div>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: state() === 'scored' && result() -->
+    <div class="bce-completeness-panel__score">
+        <div class="bce-completeness-panel__score-line">
+            <span class="bce-completeness-panel__score-number" data-bind="text: result().score === null ? '–' : result().score"></span>
+            <span class="bce-completeness-muted">/ 100</span>
+            <span data-bind="css: bandClass()">
+                <svg class="bce-completeness-chip__icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path data-bind="attr: {d: bandIcon()}" fill="currentColor" fill-rule="evenodd"></path></svg>
+                <span data-bind="text: result().band_label"></span>
+            </span>
+        </div>
+        <div class="bce-completeness-bar bce-completeness-bar--thin" role="img" data-bind="attr: {'aria-label': $t('Score %1 out of 100').replace('%1', result().score === null ? 0 : result().score)}">
+            <span class="bce-completeness-bar__fill" data-bind="css: barClass(), style: {width: (result().score || 0) + '%'}"></span>
+        </div>
+        <div data-bind="text: summaryLine()"></div>
+        <!-- ko if: result().skipped -->
+        <div class="bce-completeness-muted" data-bind="text: skippedLabel(result().skipped)"></div>
+        <!-- /ko -->
+    </div>
+    <div class="bce-completeness-overline bce-completeness-panel__overline" data-bind="text: $t('Missing · %1').replace('%1', result().missing_count)"></div>
+    <ul class="bce-completeness-panel__rules" data-bind="foreach: result().failing">
+        <li class="bce-completeness-panel__rule">
+            <svg width="16" height="16" viewBox="0 0 16 16" role="img" data-bind="attr: {'aria-label': $t('Fails')}"><circle cx="8" cy="8" r="6.4" fill="none" stroke="#b7191c" stroke-width="1.5"></circle><path d="M5.6 5.6l4.8 4.8m0-4.8l-4.8 4.8" stroke="#b7191c" stroke-width="1.5"></path></svg>
+            <div class="bce-completeness-panel__rule-text">
+                <strong data-bind="text: role_label || attribute_label"></strong>
+                <span class="bce-completeness-muted" data-bind="text: description"></span>
+                <span class="bce-completeness-panel__found">
+                    <span data-bind="text: found"></span>
+                    <!-- ko if: $parent.isProduct() && attribute_code && available -->
+                    <span aria-hidden="true">·</span>
+                    <a href="#" data-bind="click: function () { $parent.goToField($data); }, text: $parent.fieldLabel($data)"></a>
+                    <!-- /ko -->
+                </span>
+            </div>
+            <span class="bce-completeness-panel__share" data-bind="text: $parent.shareLabel($data)"></span>
+        </li>
+    </ul>
+    <div class="bce-completeness-overline bce-completeness-panel__overline" data-bind="text: $t('Passed · %1').replace('%1', result().passed_count)"></div>
+    <ul class="bce-completeness-panel__rules bce-completeness-panel__rules--passed" data-bind="foreach: result().passing">
+        <li class="bce-completeness-panel__rule">
+            <svg width="16" height="16" viewBox="0 0 16 16" role="img" data-bind="attr: {'aria-label': $t('Passes')}"><path d="M3 8.4l3.2 3.2L13 4.8" fill="none" stroke="#21763c" stroke-width="1.8"></path></svg>
+            <span class="bce-completeness-panel__rule-text"><strong data-bind="text: role_label || attribute_label"></strong> <span class="bce-completeness-muted" data-bind="text: description"></span></span>
+            <span class="bce-completeness-panel__share" data-bind="text: share + ' %'"></span>
+        </li>
+    </ul>
+    <!-- ko if: isProduct() -->
+    <div class="bce-completeness-panel__footer">
+        <button type="button" class="action-secondary" data-bind="click: recalculate, disable: !canRecalculate() || busy()">
+            <span data-bind="i18n: 'Recalculate this product'"></span>
+        </button>
+        <span class="bce-completeness-muted bce-completeness-panel__scored" data-bind="text: result().scored_at_formatted ? $t('Scored %1').replace('%1', result().scored_at_formatted) : $t('Not stored yet')"></span>
+    </div>
+    <!-- ko ifnot: canRecalculate() -->
+    <div class="bce-completeness-muted bce-completeness-panel__note" data-bind="i18n: 'Recalculating needs the Recalculate scores permission.'"></div>
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- /ko -->
+
+    <!-- ko if: state() === 'empty' -->
+    <div class="bce-completeness-panel__empty">
+        <p data-bind="i18n: 'Search for a product to see how it scores with the rules on this page, before you save.'"></p>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: state() === 'norules' -->
+    <div class="bce-completeness-panel__empty">
+        <strong data-bind="i18n: 'No rules to preview yet'"></strong>
+        <p class="bce-completeness-muted" data-bind="i18n: 'Add a rule or pick a suggestion. The preview then scores any product you search for with the rules on this page.'"></p>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: state() === 'loading' -->
+    <div class="bce-completeness-panel__loading" aria-busy="true">
+        <span class="bce-completeness-spinner" aria-hidden="true"></span>
+        <span data-bind="i18n: 'Calculating the preview…'"></span>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: state() === 'error' -->
+    <div class="bce-completeness-panel__empty message message-error" role="alert">
+        <span data-bind="text: error()"></span>
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+</div>

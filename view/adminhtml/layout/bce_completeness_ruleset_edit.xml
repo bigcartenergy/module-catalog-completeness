@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <body>
+        <referenceContainer name="page.main.actions">
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.editor.hint" template="BigCartEnergy_CatalogCompleteness::ruleset/hint.phtml" before="-">
+                <arguments>
+                    <argument name="editor" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Editor</argument>
+                    <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.editor.messages" template="BigCartEnergy_CatalogCompleteness::ruleset/messages.phtml">
+                <arguments>
+                    <argument name="editor" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Editor</argument>
+                </arguments>
+            </block>
+            <container name="bce_completeness.editor" htmlTag="div" htmlClass="bce-completeness-editor">
+                <container name="bce_completeness.editor.main" htmlTag="div" htmlClass="bce-completeness-editor__main">
+                    <uiComponent name="bce_completeness_ruleset_form"/>
+                </container>
+                <container name="bce_completeness.editor.aside" htmlTag="aside" htmlClass="bce-completeness-editor__aside">
+                    <block class="Magento\Backend\Block\Template" name="bce_completeness.editor.affected" template="BigCartEnergy_CatalogCompleteness::ruleset/affected.phtml">
+                        <arguments>
+                            <argument name="editor" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Editor</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Template" name="bce_completeness.editor.hints" template="BigCartEnergy_CatalogCompleteness::ruleset/hints.phtml">
+                        <arguments>
+                            <argument name="editor" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Editor</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Template" name="bce_completeness.editor.preview" template="BigCartEnergy_CatalogCompleteness::preview/editor.phtml">
+                        <arguments>
+                            <argument name="editor" xsi:type="object">BigCartEnergy\CatalogCompleteness\ViewModel\Editor</argument>
+                        </arguments>
+                    </block>
+                </container>
+            </container>
+            <block class="Magento\Backend\Block\Template" name="bce_completeness.footer" template="BigCartEnergy_CatalogCompleteness::brand/footer.phtml" after="-">
+                <arguments>
+                    <argument name="brand" xsi:type="object">BigCartEnergy\Core\ViewModel\Brand</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

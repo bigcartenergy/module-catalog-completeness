@@ -1,0 +1,1938 @@
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ *
+ * Catalog Completeness admin styles, mapped from the design's token sheet. Standard admin elements keep the
+ * admin theme; these classes cover the module's own elements only (chips, tiles, bars, the rules table, the
+ * preview panel). Two WCAG corrections on the module's own elements: links and the accent at #006bb4, field
+ * borders at #8a8a8a.
+ */
+
+@bce-cmpl__text: #303030;
+@bce-cmpl__muted: #666666;
+@bce-cmpl__accent: #006bb4;
+@bce-cmpl__accent-hover: #00538a;
+@bce-cmpl__accent-tint: #e9f5ff;
+@bce-cmpl__border-field: #8a8a8a;
+@bce-cmpl__border-button: #adadad;
+@bce-cmpl__fill-button: #e3e3e3;
+@bce-cmpl__divider: #e3e3e3;
+@bce-cmpl__border-table: #d6d6d6;
+@bce-cmpl__surface-alt: #f5f5f5;
+@bce-cmpl__surface-bar: #f8f8f8;
+@bce-cmpl__grid-header: #4d4d4d;
+@bce-cmpl__skeleton: #ececec;
+@bce-cmpl__chip-fill: #f0f0f0;
+@bce-cmpl__error: #b7191c;
+@bce-cmpl__warning: #8a5600;
+@bce-cmpl__warning-fill: #fff7d1;
+@bce-cmpl__success: #256c2c;
+
+@bce-cmpl__complete-bar: #21763c;
+@bce-cmpl__complete-fill: #e0f7e4;
+@bce-cmpl__complete-text: #114c24;
+@bce-cmpl__good-bar: #698e2f;
+@bce-cmpl__good-fill: #ebf8d7;
+@bce-cmpl__good-text: #3a5018;
+@bce-cmpl__needs-bar: #c8800d;
+@bce-cmpl__needs-fill: #fff1ca;
+@bce-cmpl__needs-text: #724310;
+@bce-cmpl__poor-bar: #c1332f;
+@bce-cmpl__poor-fill: #ffe9e6;
+@bce-cmpl__poor-text: #94221f;
+
+@bce-cmpl__font-mono: ui-monospace, Menlo, Consolas, monospace;
+
+//
+//  Shared pieces
+//  ---------------------------------------------
+
+.bce-completeness-muted {
+    color: @bce-cmpl__muted;
+}
+
+.bce-completeness-code {
+    font-family: @bce-cmpl__font-mono;
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+}
+
+.bce-completeness-overline {
+    color: @bce-cmpl__muted;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    line-height: 1.6rem;
+    text-transform: uppercase;
+}
+
+.bce-completeness-visually-hidden {
+    clip: rect(0 0 0 0);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+}
+
+.bce-completeness-section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 2.8rem;
+    margin: 0;
+}
+
+.bce-completeness-chip {
+    align-items: center;
+    border-radius: 2px;
+    display: inline-flex;
+    font-size: 1.2rem;
+    font-weight: 600;
+    gap: .4rem;
+    height: 2rem;
+    line-height: 1.6rem;
+    padding: 0 .6rem 0 .4rem;
+    white-space: nowrap;
+
+    &__icon {
+        flex: none;
+    }
+
+    &--complete {
+        background: @bce-cmpl__complete-fill;
+        color: @bce-cmpl__complete-text;
+    }
+
+    &--good {
+        background: @bce-cmpl__good-fill;
+        color: @bce-cmpl__good-text;
+    }
+
+    &--needs_work {
+        background: @bce-cmpl__needs-fill;
+        color: @bce-cmpl__needs-text;
+    }
+
+    &--poor {
+        background: @bce-cmpl__poor-fill;
+        color: @bce-cmpl__poor-text;
+    }
+}
+
+.bce-completeness-weight {
+    align-items: center;
+    border: 1px solid @bce-cmpl__border-table;
+    border-radius: 2px;
+    box-sizing: border-box;
+    display: inline-flex;
+    font-size: 1.2rem;
+    font-weight: 600;
+    gap: .6rem;
+    height: 2.2rem;
+    line-height: 1.6rem;
+    padding: 0 .8rem;
+    white-space: nowrap;
+
+    &__bars {
+        align-items: flex-end;
+        display: inline-flex;
+        gap: 2px;
+        height: 10px;
+    }
+
+    &__bar {
+        background: #c8c8c8;
+        width: 3px;
+
+        &:nth-child(1) {
+            height: 4px;
+        }
+
+        &:nth-child(2) {
+            height: 7px;
+        }
+
+        &:nth-child(3) {
+            height: 10px;
+        }
+
+        &--on {
+            background: @bce-cmpl__text;
+        }
+    }
+}
+
+.bce-completeness-tag {
+    background: @bce-cmpl__chip-fill;
+    border: 1px solid @bce-cmpl__border-table;
+    border-radius: 2px;
+    display: inline-flex;
+    font-size: 1.2rem;
+    height: 2rem;
+    line-height: 1.8rem;
+    padding: 0 .6rem;
+    white-space: nowrap;
+}
+
+.bce-completeness-tag-more {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.6rem;
+}
+
+.bce-completeness-badge {
+    border-radius: 2px;
+    display: inline-flex;
+    font-size: 1.2rem;
+    font-weight: 600;
+    height: 2rem;
+    line-height: 1.8rem;
+    padding: 0 .6rem;
+    white-space: nowrap;
+
+    &--warning {
+        background: @bce-cmpl__warning-fill;
+        border: 1px solid fade(@bce-cmpl__warning, 40%);
+    }
+}
+
+.bce-completeness-bar {
+    background: @bce-cmpl__divider;
+    display: block;
+    height: 8px;
+    overflow: hidden;
+
+    &--thin {
+        height: 6px;
+    }
+
+    &__fill {
+        display: block;
+        height: 100%;
+    }
+}
+
+.bce-completeness-dist__bar--complete {
+    background: @bce-cmpl__complete-bar;
+}
+
+.bce-completeness-dist__bar--good {
+    background: @bce-cmpl__good-bar;
+}
+
+.bce-completeness-dist__bar--needs_work {
+    background: @bce-cmpl__needs-bar;
+}
+
+.bce-completeness-dist__bar--poor {
+    background: @bce-cmpl__poor-bar;
+}
+
+.bce-completeness-progress {
+    background: #fff;
+    border: 1px solid fade(@bce-cmpl__warning, 45%);
+    height: 8px;
+    margin-top: .8rem;
+    max-width: 52rem;
+    overflow: hidden;
+
+    &__fill {
+        background: @bce-cmpl__grid-header;
+        height: 100%;
+        transition: width .3s;
+    }
+}
+
+.bce-completeness-spinner {
+    animation: bce-completeness-spin 1s linear infinite;
+    border: 2px solid @bce-cmpl__divider;
+    border-radius: 50%;
+    border-top-color: @bce-cmpl__accent;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+@keyframes bce-completeness-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.bce-completeness-lockup,
+.bce-completeness-footer {
+    a {
+        color: @bce-cmpl__accent;
+        text-decoration: underline;
+
+        &:hover,
+        &:focus {
+            color: @bce-cmpl__accent-hover;
+        }
+    }
+}
+
+.bce-completeness-popover {
+    background: #fff;
+    border: 1px solid @bce-cmpl__border-button;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    left: 0;
+    padding: 1.2rem 1.4rem;
+    position: absolute;
+    top: 100%;
+    width: 32rem;
+    z-index: 5;
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: space-between;
+        }
+    }
+}
+
+//
+//  Dashboard: actions bar, status, filters
+//  ---------------------------------------------
+
+.bce-completeness-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    justify-content: space-between;
+    width: 100%;
+
+    &__controls {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.6rem;
+    }
+
+    &__scope {
+        align-items: center;
+        display: flex;
+        gap: 1rem;
+    }
+
+    &__label {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    &__select {
+        min-width: 24rem;
+    }
+
+    &__buttons {
+        align-items: center;
+        display: flex;
+        gap: .8rem;
+    }
+
+    &__link {
+        font-weight: 600;
+        margin-right: .8rem;
+    }
+
+    &__form {
+        display: inline;
+    }
+}
+
+.bce-completeness-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.bce-completeness-status {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    &__line {
+        align-items: center;
+        display: flex;
+        gap: 1.6rem;
+        justify-content: space-between;
+    }
+
+    &__text {
+        align-items: center;
+        color: @bce-cmpl__muted;
+        display: flex;
+        font-size: 1.3rem;
+        gap: .8rem;
+        line-height: 1.8rem;
+    }
+
+    &__icon {
+        flex: none;
+    }
+
+    &__message {
+        align-items: flex-start;
+        display: flex;
+        gap: 1.2rem;
+        justify-content: space-between;
+
+        > div {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: .4rem;
+            min-width: 0;
+        }
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__code-line {
+        font-size: 1.3rem;
+
+        code {
+            background: #fff;
+            border: 1px solid @bce-cmpl__divider;
+            font-family: @bce-cmpl__font-mono;
+            font-size: 1.2rem;
+            padding: .1rem .4rem;
+        }
+    }
+
+    &__actions {
+        align-items: center;
+        display: flex;
+        gap: 1.6rem;
+        margin-top: .4rem;
+    }
+}
+
+.bce-completeness-firstrun {
+    border: 1px solid @bce-cmpl__divider;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    max-width: 92rem;
+    padding: 3.2rem 4rem 2.8rem;
+
+    &__title {
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 2.8rem;
+        margin: 0 0 .6rem;
+    }
+
+    &__lead {
+        margin: 0;
+        max-width: 64rem;
+    }
+
+    &__steps {
+        display: grid;
+        gap: 2.4rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            border-top: 2px solid @bce-cmpl__text;
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
+            padding-top: 1.2rem;
+
+            span:last-child {
+                color: @bce-cmpl__muted;
+                font-size: 1.3rem;
+                line-height: 1.8rem;
+            }
+        }
+    }
+
+    &__step {
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+
+    &__note {
+        color: @bce-cmpl__muted;
+        font-size: 1.3rem;
+        line-height: 1.8rem;
+        margin: 0;
+        max-width: 64rem;
+    }
+}
+
+.bce-completeness-never {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 92rem;
+
+    &__title {
+        font-size: 1.6rem;
+        line-height: 2.2rem;
+    }
+
+    &__note {
+        color: @bce-cmpl__muted;
+        font-size: 1.3rem;
+        margin: 0;
+    }
+}
+
+.bce-completeness-zero {
+    align-items: flex-start;
+    border: 1px solid @bce-cmpl__divider;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 4rem;
+
+    &__title {
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 2.8rem;
+        margin: 0;
+    }
+
+    p {
+        margin: 0;
+        max-width: 62rem;
+    }
+}
+
+.bce-completeness-filters {
+    border: 1px solid @bce-cmpl__divider;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.2rem 1.6rem;
+
+    &__grid {
+        align-items: end;
+        display: grid;
+        gap: 1.2rem 1.6rem;
+        grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: .4rem;
+        min-width: 0;
+    }
+
+    &__label {
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 1.6rem;
+    }
+
+    &__switch {
+        align-items: center;
+        display: flex;
+        gap: .8rem;
+        height: 3.2rem;
+        white-space: nowrap;
+    }
+
+    &__active {
+        align-items: center;
+        border-top: 1px solid @bce-cmpl__divider;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .8rem;
+        padding-top: 1rem;
+    }
+
+    &__active-label {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    &__clear {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+}
+
+.bce-completeness-filter-chip {
+    align-items: center;
+    background: @bce-cmpl__chip-fill;
+    border: 1px solid @bce-cmpl__border-table;
+    box-sizing: border-box;
+    display: inline-flex;
+    font-size: 1.3rem;
+    gap: .4rem;
+    height: 2.6rem;
+    padding: 0 .2rem 0 1rem;
+
+    &__remove {
+        align-items: center;
+        color: @bce-cmpl__text;
+        display: inline-flex;
+        height: 2.2rem;
+        justify-content: center;
+        text-decoration: none;
+        width: 2.2rem;
+    }
+}
+
+//
+//  Dashboard: tiles, cards, breakdown, most-missing
+//  ---------------------------------------------
+
+.bce-completeness-tiles {
+    display: grid;
+    gap: 1.6rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.bce-completeness-tile {
+    background: #fff;
+    border: 1px solid @bce-cmpl__border-table;
+    color: @bce-cmpl__text;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    min-width: 0;
+    padding: 1.4rem 1.6rem 1.2rem;
+    text-decoration: none;
+    appearance: none;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    width: 100%;
+
+    &:hover {
+        border-color: @bce-cmpl__accent;
+        box-shadow: inset 0 0 0 1px @bce-cmpl__accent;
+        color: @bce-cmpl__text;
+        text-decoration: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid @bce-cmpl__accent;
+        outline-offset: 2px;
+    }
+
+    &[aria-pressed='true'] {
+        background: @bce-cmpl__accent-tint;
+        border-color: @bce-cmpl__accent;
+        box-shadow: inset 0 0 0 1px @bce-cmpl__accent;
+
+        .bce-completeness-tile__footer {
+            color: @bce-cmpl__accent-hover;
+        }
+    }
+
+    &--static {
+        cursor: default;
+    }
+
+    &__label {
+        font-size: 1.3rem;
+        font-weight: 600;
+        line-height: 1.8rem;
+
+        &--pair {
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .6rem;
+        }
+    }
+
+    &__value {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        min-height: 4rem;
+
+        &--text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 2rem;
+        }
+    }
+
+    &__number {
+        font-size: 3.2rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 300;
+        line-height: 4rem;
+    }
+
+    &__sub {
+        color: @bce-cmpl__muted;
+        font-size: 1.3rem;
+        line-height: 1.8rem;
+    }
+
+    &__footer {
+        color: @bce-cmpl__accent;
+        font-size: 1.3rem;
+        font-weight: 600;
+        line-height: 1.8rem;
+        margin-top: auto;
+        padding-top: .6rem;
+    }
+}
+
+.bce-completeness-cards {
+    align-items: start;
+    display: grid;
+    gap: 2.4rem;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+
+    &__left {
+        display: flex;
+        flex-direction: column;
+        gap: 2.4rem;
+        grid-column: span 7;
+        min-width: 0;
+    }
+
+    &__right {
+        grid-column: span 5;
+        min-width: 0;
+    }
+}
+
+.bce-completeness-card {
+    background: #fff;
+    border: 1px solid @bce-cmpl__divider;
+
+    &__head {
+        align-items: baseline;
+        border-bottom: 1px solid @bce-cmpl__divider;
+        display: flex;
+        gap: 1.2rem;
+        justify-content: space-between;
+        padding: 1.2rem 1.6rem;
+
+        &--tight {
+            align-items: center;
+            flex-wrap: wrap;
+            padding: .9rem 1.6rem;
+        }
+    }
+
+    &__title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        line-height: 2.2rem;
+        margin: 0;
+    }
+
+    &__note {
+        color: @bce-cmpl__muted;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        margin: 0;
+        padding: 1rem 1.6rem 1.4rem;
+    }
+}
+
+.bce-completeness-dist {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 1.4rem 1.6rem 1.2rem;
+
+    &__row {
+        align-items: center;
+        display: grid;
+        gap: 1.2rem;
+        grid-template-columns: 11.2rem minmax(0, 1fr);
+    }
+
+    &__track {
+        align-items: center;
+        display: flex;
+        gap: 1rem;
+        min-width: 0;
+    }
+
+    &__bar {
+        display: block;
+        flex: none;
+        height: 2rem;
+    }
+
+    &__count {
+        font-size: 1.3rem;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+}
+
+.bce-completeness-segments {
+    display: flex;
+
+    &__item {
+        background: #fff;
+        border: 1px solid @bce-cmpl__border-field;
+        color: @bce-cmpl__text;
+        font-size: 1.3rem;
+        line-height: 1.8rem;
+        margin-left: -1px;
+        padding: .5rem 1.2rem;
+        position: relative;
+        text-decoration: none;
+
+        &:first-child {
+            margin-left: 0;
+        }
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
+
+        &--selected {
+            background: @bce-cmpl__accent-tint;
+            border-color: @bce-cmpl__accent;
+            color: @bce-cmpl__accent-hover;
+            font-weight: 700;
+            z-index: 1;
+        }
+    }
+}
+
+.bce-completeness-table {
+    border-collapse: collapse;
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+    width: 100%;
+
+    th,
+    td {
+        border-bottom: 1px solid @bce-cmpl__divider;
+        padding: .8rem 1.2rem;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    th {
+        background: @bce-cmpl__surface-alt;
+        border-bottom-color: @bce-cmpl__border-table;
+        font-weight: 600;
+    }
+
+    &__num {
+        font-variant-numeric: tabular-nums;
+        text-align: right !important;
+    }
+
+    &__avg {
+        white-space: nowrap;
+
+        strong {
+            display: inline-block;
+            margin-right: .8rem;
+            min-width: 2rem;
+        }
+    }
+
+    &__action {
+        text-align: right !important;
+        white-space: nowrap;
+
+        a {
+            font-weight: 600;
+        }
+    }
+}
+
+.bce-completeness-missing {
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+    list-style: none;
+    margin: 0;
+    padding: 0 1.6rem .4rem;
+
+    &__row {
+        align-items: start;
+        border-bottom: 1px solid @bce-cmpl__divider;
+        display: grid;
+        gap: 1.2rem;
+        grid-template-columns: 2rem minmax(0, 1fr) auto auto;
+        padding: 1rem 0;
+    }
+
+    &__rank {
+        color: @bce-cmpl__muted;
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    &__count {
+        align-items: flex-end;
+        display: flex;
+        flex-direction: column;
+        white-space: nowrap;
+
+        a {
+            font-weight: 600;
+        }
+    }
+}
+
+.bce-completeness-worklist-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: .8rem;
+
+    &__head {
+        align-items: baseline;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+    }
+}
+
+.bce-completeness-score-cell {
+    align-items: center;
+    display: flex;
+    gap: .8rem;
+
+    &__number {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        min-width: 2rem;
+    }
+}
+
+.bce-completeness-missing-cell {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    position: relative;
+
+    &:focus {
+        outline: 2px solid @bce-cmpl__accent;
+        outline-offset: 2px;
+    }
+}
+
+//
+//  Rule set editor
+//  ---------------------------------------------
+
+.bce-completeness-editor {
+    align-items: start;
+    display: grid;
+    gap: 2.4rem;
+    grid-template-columns: minmax(0, 1fr) 36rem;
+
+    &__main {
+        min-width: 0;
+    }
+
+    &__aside {
+        display: flex;
+        flex-direction: column;
+        gap: 1.6rem;
+        position: sticky;
+        top: 1.6rem;
+    }
+
+    // Below 1340 px the aside sits under the form, so the rules table keeps every column readable.
+    @media (max-width: 1340px) {
+        grid-template-columns: minmax(0, 1fr);
+
+        &__aside {
+            position: static;
+        }
+    }
+
+    // A channel profile's table has a Role column more (min 22.5rem, see the rules grid), and beside the aside the
+    // table fits with every column at its minimum only from 1579 px, so a profile's aside sits under the form below
+    // that (its table rows carry the role modifier). Attribute set rule sets keep the 1340 px breakpoint.
+    @media (max-width: 1578px) {
+        &:has(.bce-completeness-rules__grid--role) {
+            grid-template-columns: minmax(0, 1fr);
+
+            .bce-completeness-editor__aside {
+                position: static;
+            }
+        }
+    }
+}
+
+.bce-completeness-editor-hint {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.3rem;
+    gap: .8rem;
+    line-height: 1.8rem;
+    margin-right: auto;
+    min-height: 3.4rem;
+
+    &__unsaved {
+        font-weight: 700;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__readonly {
+        font-weight: 600;
+    }
+
+    &__brand {
+        margin-left: 1.6rem;
+    }
+}
+
+.bce-completeness-editor-messages {
+    .message {
+        align-items: flex-start;
+        display: flex;
+        gap: 1.2rem;
+        justify-content: space-between;
+
+        > div {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: .4rem;
+            min-width: 0;
+        }
+
+        &[hidden] {
+            display: none;
+        }
+    }
+}
+
+.bce-completeness-affected {
+    background: @bce-cmpl__surface-bar;
+    border: 1px solid @bce-cmpl__border-table;
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    padding: 1.2rem 1.6rem;
+
+    &__link {
+        font-size: 1.4rem;
+        font-weight: 600;
+        line-height: 2rem;
+    }
+
+    span[hidden] {
+        display: none;
+    }
+}
+
+.bce-completeness-hints {
+    &__card {
+        background: #fff;
+        border: 1px solid @bce-cmpl__border-table;
+    }
+
+    &__head {
+        border-bottom: 1px solid @bce-cmpl__divider;
+        display: flex;
+        flex-direction: column;
+        gap: .4rem;
+        padding: 1.2rem 1.6rem;
+
+        p {
+            font-size: 1.3rem;
+            line-height: 1.8rem;
+            margin: 0;
+        }
+    }
+
+    &__title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        line-height: 2.2rem;
+        margin: 0;
+    }
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: .4rem 1.6rem;
+    }
+
+    &__row {
+        align-items: center;
+        border-bottom: 1px solid @bce-cmpl__divider;
+        display: grid;
+        gap: 1.2rem;
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 1rem 0;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+
+        &--added {
+            opacity: .7;
+        }
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        font-size: 1.3rem;
+        gap: .2rem;
+        line-height: 1.8rem;
+        min-width: 0;
+    }
+
+    &__rule {
+        color: @bce-cmpl__muted;
+        display: flex;
+        font-size: 1.2rem;
+        gap: .6rem;
+    }
+
+    &__added {
+        color: @bce-cmpl__success;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    &__foot {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        margin: 0;
+        padding: 1rem 1.6rem 1.2rem;
+    }
+}
+
+.bce-completeness-rules {
+    &__summary {
+        margin-bottom: 1.2rem;
+
+        &[hidden] {
+            display: none;
+        }
+
+        a {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-right: 1.6rem;
+        }
+    }
+
+    table.admin__dynamic-rows {
+        border: 0;
+        margin: 0;
+
+        th,
+        td {
+            border: 0;
+            padding: 0;
+            vertical-align: top;
+        }
+
+        thead th {
+            background: @bce-cmpl__surface-alt;
+            border-bottom: 1px solid @bce-cmpl__border-table;
+        }
+
+        tbody tr {
+            border-top: 1px solid @bce-cmpl__divider;
+        }
+
+        .col-draggable {
+            padding: 1rem 0 0 .4rem;
+            width: 2.8rem;
+        }
+    }
+
+    // An admin select is as wide as its longest option. The Rule (min 23.5rem) and Weight (14.5rem) tracks hold theirs,
+    // One of the allowed values and Nice to have, with about 0.5rem to spare for another font rendering; a profile's
+    // Role track (min 22.5rem from 1280 px) holds Google product category. Share and Remove are as wide as their
+    // content, and the footer keeps the same tracks.
+    &__grid {
+        column-gap: .8rem;
+        display: grid;
+        grid-template-columns: minmax(15rem, 1.5fr) minmax(23.5rem, 1.1fr) minmax(12rem, 1fr) 14.5rem 4.4rem 2.8rem;
+        padding: 1rem 1.2rem 1.2rem .4rem;
+        row-gap: .8rem;
+
+        &--role {
+            grid-template-columns: minmax(22.5rem, 1fr) minmax(15rem, 1.3fr) minmax(23.5rem, 1.1fr) minmax(11.2rem, .9fr) 14.5rem 4.4rem 2.8rem;
+
+            // Narrower screens keep the earlier Role minimum, so the table still fits without scrolling.
+            @media (max-width: 1279px) {
+                grid-template-columns: minmax(11rem, 1fr) minmax(15rem, 1.3fr) minmax(23.5rem, 1.1fr) minmax(11.2rem, .9fr) 14.5rem 4.4rem 2.8rem;
+            }
+        }
+    }
+
+    &__header {
+        font-size: 1.3rem;
+        font-weight: 600;
+        line-height: 1.8rem;
+        padding: .8rem 1.2rem .8rem .4rem;
+        row-gap: .2rem;
+
+        .bce-completeness-rules__sub {
+            color: @bce-cmpl__muted;
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.6rem;
+        }
+    }
+
+    &__share {
+        font-size: 1.3rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        padding-top: .7rem;
+        text-align: right;
+
+        &--none {
+            color: @bce-cmpl__muted;
+        }
+    }
+
+    &__remove {
+        background: transparent;
+        border: 0;
+        color: @bce-cmpl__text;
+        cursor: pointer;
+        height: 2.8rem;
+        padding: 0;
+        width: 2.8rem;
+
+        &:hover,
+        &:focus {
+            color: @bce-cmpl__error;
+        }
+    }
+
+    &__line2 {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .4rem;
+        // Escaped: the LESS compiler of Magento 2.3 divides an unescaped 3 / 7.
+        grid-column: ~"3 / 7";
+
+        .bce-completeness-rules__grid--role & {
+            grid-column: ~"4 / 8";
+        }
+    }
+
+    &__edited {
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 1.6rem;
+        margin-left: auto;
+        white-space: nowrap;
+    }
+
+    &__row-message {
+        align-items: flex-start;
+        display: flex;
+        font-size: 1.3rem;
+        font-weight: 600;
+        gap: .6rem;
+        grid-column: ~"1 / 7";
+        line-height: 1.8rem;
+
+        .bce-completeness-rules__grid--role & {
+            grid-column: ~"1 / 8";
+        }
+
+        &--error {
+            color: @bce-cmpl__error;
+        }
+
+        &--warning {
+            color: @bce-cmpl__text;
+            font-weight: 400;
+        }
+    }
+
+    &__footer {
+        align-items: center;
+        background: @bce-cmpl__surface-bar;
+        border-top: 1px solid @bce-cmpl__border-table;
+        column-gap: .8rem;
+        display: grid;
+        font-size: 1.3rem;
+        grid-template-columns: minmax(0, 1fr) 14.5rem 4.4rem 2.8rem;
+        line-height: 1.8rem;
+        padding: 1rem 1.2rem 1rem .4rem;
+
+        strong {
+            text-align: right;
+        }
+    }
+
+    &__total {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    &__actions {
+        align-items: center;
+        border-top: 1px solid @bce-cmpl__divider;
+        display: flex;
+        gap: 1.2rem;
+        padding: 1.2rem 1.6rem;
+
+        // The help text only: the "+ Add rule" button's own spans keep the button's colours.
+        > span {
+            color: @bce-cmpl__muted;
+            font-size: 1.2rem;
+            line-height: 1.6rem;
+        }
+    }
+
+    &__empty {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: .8rem;
+        padding: 3.6rem 1.6rem;
+        text-align: center;
+
+        span {
+            color: @bce-cmpl__muted;
+            max-width: 48rem;
+        }
+    }
+
+    &__move {
+        background: transparent;
+        border: 0;
+        color: @bce-cmpl__muted;
+        cursor: pointer;
+        font-size: 1rem;
+        line-height: 1;
+        padding: .1rem;
+    }
+
+    .draggable-handle {
+        cursor: grab;
+        display: inline-block;
+        height: 1.6rem;
+        width: 1rem;
+    }
+}
+
+.bce-completeness-cell {
+    min-width: 0;
+
+    .admin__control-select,
+    .admin__control-text {
+        border-color: @bce-cmpl__border-field;
+        border-radius: 1px;
+        min-height: 3.2rem;
+
+        &:focus {
+            border-color: @bce-cmpl__accent;
+            box-shadow: none;
+            outline: 2px solid @bce-cmpl__accent;
+            outline-offset: 2px;
+        }
+    }
+
+    .admin__field-error {
+        display: none;
+    }
+
+    &._error {
+        .admin__control-select,
+        .admin__control-text,
+        .bce-completeness-picker__toggle {
+            border-color: @bce-cmpl__error;
+            box-shadow: 0 0 0 1px @bce-cmpl__error;
+        }
+    }
+}
+
+.bce-completeness-picker {
+    position: relative;
+
+    &__toggle {
+        align-items: flex-start;
+        background: #fff;
+        border: 1px solid @bce-cmpl__border-field;
+        border-radius: 1px;
+        box-sizing: border-box;
+        color: @bce-cmpl__text;
+        cursor: pointer;
+        display: flex;
+        font-size: 1.3rem;
+        gap: .6rem;
+        justify-content: space-between;
+        line-height: 1.8rem;
+        min-height: 3.2rem;
+        padding: .6rem .8rem .6rem 1rem;
+        text-align: left;
+        width: 100%;
+
+        svg {
+            flex: none;
+            margin-top: .3rem;
+        }
+    }
+
+    &._warning &__toggle {
+        border-color: @bce-cmpl__warning;
+    }
+
+    &__label {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    &__code-line {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .6rem;
+        margin-top: .4rem;
+        min-height: 1.6rem;
+    }
+
+    &__menu {
+        background: #fff;
+        border: 1px solid @bce-cmpl__border-field;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+        left: 0;
+        position: absolute;
+        top: 3.6rem;
+        width: 36rem;
+        z-index: 6;
+    }
+
+    &__search {
+        border-bottom: 1px solid @bce-cmpl__divider;
+        padding: .8rem;
+    }
+
+    &__options {
+        list-style: none;
+        margin: 0;
+        max-height: 32rem;
+        overflow: auto;
+        padding: .4rem 0;
+
+        li {
+            align-items: center;
+            column-gap: .8rem;
+            cursor: pointer;
+            display: grid;
+            font-size: 1.3rem;
+            grid-template-columns: 1.4rem minmax(0, 1fr) auto;
+            padding: .6rem 1rem;
+
+            &:hover,
+            &:focus,
+            &._selected {
+                background: @bce-cmpl__accent-tint;
+            }
+        }
+    }
+
+    &__sets {
+        color: @bce-cmpl__muted;
+        font-size: 1.2rem;
+        white-space: nowrap;
+
+        &._partial {
+            color: @bce-cmpl__warning;
+        }
+    }
+
+    &__none {
+        padding: .8rem 1rem;
+    }
+}
+
+.bce-completeness-parameter {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+
+    // A one-line textarea that grows with its value, so a long pattern or value list wraps instead of scrolling
+    // sideways. It stops at eight lines (16 + 8 x 18 px) and scrolls past them.
+    &__input {
+        field-sizing: content;
+        line-height: 1.8rem;
+        max-height: 16rem;
+        min-height: 3.2rem;
+        min-width: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overflow-wrap: anywhere;
+        resize: none;
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
+
+    &__unit {
+        flex: none;
+        font-size: 1.2rem;
+        white-space: nowrap;
+    }
+
+    &__none {
+        display: inline-block;
+        font-size: 1.2rem;
+        padding: .8rem 0 0 .2rem;
+    }
+}
+
+.bce-completeness-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+}
+
+.bce-completeness-type-chip {
+    align-items: center;
+    background: #fff;
+    border: 1px dashed @bce-cmpl__border-field;
+    border-radius: 2px;
+    box-sizing: border-box;
+    color: @bce-cmpl__muted;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.2rem;
+    gap: .3rem;
+    height: 2.2rem;
+    line-height: 1.6rem;
+    padding: 0 .6rem;
+    white-space: nowrap;
+
+    &._on {
+        background: @bce-cmpl__chip-fill;
+        border-style: solid;
+        color: @bce-cmpl__text;
+        padding-left: .4rem;
+    }
+
+    &[disabled] {
+        cursor: default;
+    }
+}
+
+.bce-completeness-form--readonly {
+    .bce-completeness-cell .admin__control-select[disabled],
+    .bce-completeness-cell .admin__control-text[disabled],
+    .bce-completeness-picker._disabled .bce-completeness-picker__toggle {
+        background: transparent;
+        border-color: transparent;
+        box-shadow: none;
+        color: @bce-cmpl__text;
+        opacity: 1;
+    }
+}
+
+//
+//  Preview panel
+//  ---------------------------------------------
+
+.bce-completeness-panel-host--product {
+    clear: both;
+    margin: 2.4rem 0 0;
+    max-width: 72rem;
+}
+
+.bce-completeness-panel {
+    background: #fff;
+    border: 1px solid @bce-cmpl__border-table;
+    color: @bce-cmpl__text;
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+
+    &__collapsed {
+        align-items: flex-start;
+        display: flex;
+        gap: 1.2rem;
+        padding: 1.2rem 1.6rem;
+    }
+
+    &__collapsed-text {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: .6rem;
+        min-width: 0;
+    }
+
+    &__chip-line {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .8rem;
+    }
+
+    &__header {
+        border-bottom: 1px solid @bce-cmpl__divider;
+        display: flex;
+        flex-direction: column;
+        gap: .8rem;
+        padding: 1.2rem 1.6rem;
+    }
+
+    &__title-line {
+        align-items: center;
+        display: flex;
+        gap: .8rem;
+        justify-content: space-between;
+    }
+
+    &__mark {
+        display: inline-flex;
+        flex: none;
+    }
+
+    &__title {
+        flex: 1;
+        font-size: 1.6rem;
+        font-weight: 600;
+        line-height: 2.2rem;
+        margin: 0;
+    }
+
+    &__toggle {
+        background: transparent;
+        border: 0;
+        color: @bce-cmpl__text;
+        cursor: pointer;
+        height: 3.2rem;
+        margin-right: -.8rem;
+        padding: 0;
+        width: 3.2rem;
+    }
+
+    &__select {
+        align-items: center;
+        display: flex;
+        gap: 1rem;
+
+        select {
+            flex: 1;
+        }
+    }
+
+    &__label {
+        font-size: 1.2rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    &__unsaved {
+        font-size: 1.2rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    &__search {
+        position: relative;
+
+        input {
+            width: 100%;
+        }
+    }
+
+    &__results {
+        background: #fff;
+        border: 1px solid @bce-cmpl__border-field;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+        left: 0;
+        list-style: none;
+        margin: 0;
+        max-height: 28rem;
+        overflow: auto;
+        padding: .4rem 0;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        z-index: 6;
+
+        li {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            padding: .6rem 1rem;
+
+            &:hover,
+            &:focus {
+                background: @bce-cmpl__accent-tint;
+            }
+        }
+    }
+
+    &__product {
+        align-items: flex-start;
+        border-top: 1px solid @bce-cmpl__divider;
+        display: flex;
+        gap: 1.2rem;
+        margin: .4rem -1.6rem -1.2rem;
+        padding: 1.2rem 1.6rem;
+    }
+
+    &__product-text {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: .2rem;
+        min-width: 0;
+
+        .bce-completeness-muted {
+            font-size: 1.2rem;
+            line-height: 1.6rem;
+        }
+    }
+
+    &__clear {
+        background: transparent;
+        border: 0;
+        color: @bce-cmpl__muted;
+        cursor: pointer;
+        font-size: 1.8rem;
+        height: 2.8rem;
+        line-height: 1;
+        padding: 0;
+        width: 2.8rem;
+    }
+
+    &__score {
+        border-bottom: 1px solid @bce-cmpl__divider;
+        display: flex;
+        flex-direction: column;
+        gap: .8rem;
+        padding: 1.4rem 1.6rem;
+    }
+
+    &__score-line {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    &__score-number {
+        font-size: 3.2rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 300;
+        line-height: 3.6rem;
+    }
+
+    &__overline {
+        padding: 1.2rem 1.6rem 0;
+    }
+
+    &__rules {
+        list-style: none;
+        margin: 0;
+        padding: .4rem 1.6rem .8rem;
+
+        &--passed li {
+            padding: .6rem 0;
+        }
+    }
+
+    &__rule {
+        border-bottom: 1px solid @bce-cmpl__chip-fill;
+        column-gap: .8rem;
+        display: grid;
+        grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+        padding: .8rem 0;
+
+        svg {
+            margin-top: .1rem;
+        }
+    }
+
+    &__rule-text {
+        display: flex;
+        flex-direction: column;
+        gap: .1rem;
+        min-width: 0;
+    }
+
+    &__found {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 .6rem;
+        margin-top: .2rem;
+    }
+
+    &__share {
+        color: @bce-cmpl__muted;
+        font-size: 1.2rem;
+        line-height: 1.8rem;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    &__footer {
+        align-items: center;
+        background: @bce-cmpl__surface-bar;
+        border-top: 1px solid @bce-cmpl__divider;
+        display: flex;
+        gap: 1.2rem;
+        justify-content: space-between;
+        padding: 1.2rem 1.6rem;
+    }
+
+    &__scored {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        text-align: right;
+    }
+
+    &__note {
+        background: @bce-cmpl__surface-bar;
+        font-size: 1.2rem;
+        padding: 0 1.6rem 1.2rem;
+    }
+
+    &__empty {
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+        padding: 1.6rem;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    &__loading {
+        align-items: center;
+        color: @bce-cmpl__muted;
+        display: flex;
+        gap: .8rem;
+        padding: 1.6rem;
+    }
+}
+
+//
+//  Narrow admin windows
+//  ---------------------------------------------
+
+@media (max-width: 1279px) {
+    .bce-completeness-tiles {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bce-completeness-cards {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+
+        &__left,
+        &__right {
+            grid-column: auto;
+            max-width: none;
+            min-width: 0;
+            width: auto;
+        }
+    }
+
+    .bce-completeness-filters__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bce-completeness-editor {
+        display: flex;
+        flex-direction: column;
+
+        &__aside {
+            position: static;
+        }
+    }
+}
+
+//
+//  Fix round: the breakdown bar column, the no-image thumbnail, the first-run calculation panel
+//  ---------------------------------------------
+
+.bce-completeness-table__bar {
+    min-width: 9.2rem;
+    width: 9.2rem;
+
+    .bce-completeness-bar {
+        width: 9.2rem;
+    }
+}
+
+.bce-completeness-thumb__none {
+    align-items: center;
+    border: 1px dashed @bce-cmpl__border-button;
+    color: @bce-cmpl__muted;
+    display: inline-flex;
+    height: 4rem;
+    justify-content: center;
+    width: 4rem;
+}
+
+.bce-completeness-zero--calculating {
+    .bce-completeness-zero__title {
+        &:before {
+            animation: bce-completeness-spin 1s linear infinite;
+            border: 2px solid @bce-cmpl__divider;
+            border-radius: 50%;
+            border-top-color: @bce-cmpl__accent;
+            content: '';
+            display: inline-block;
+            height: 1.6rem;
+            margin-right: .8rem;
+            vertical-align: -.2rem;
+            width: 1.6rem;
+        }
+    }
+}
+
+@keyframes bce-completeness-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.bce-completeness-rules .admin__control-table-wrapper {
+    overflow-x: auto;
+}

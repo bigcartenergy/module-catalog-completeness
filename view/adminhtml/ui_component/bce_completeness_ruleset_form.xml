@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">bce_completeness_ruleset_form.bce_completeness_ruleset_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Rule set</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="back" class="BigCartEnergy\CatalogCompleteness\Block\Adminhtml\RuleSet\Edit\BackButton"/>
+            <button name="delete" class="BigCartEnergy\CatalogCompleteness\Block\Adminhtml\RuleSet\Edit\DeleteButton"/>
+            <button name="duplicate" class="BigCartEnergy\CatalogCompleteness\Block\Adminhtml\RuleSet\Edit\DuplicateButton"/>
+            <button name="save" class="BigCartEnergy\CatalogCompleteness\Block\Adminhtml\RuleSet\Edit\SaveButton"/>
+            <button name="save_recalculate" class="BigCartEnergy\CatalogCompleteness\Block\Adminhtml\RuleSet\Edit\SaveAndRecalculateButton"/>
+        </buttons>
+        <namespace>bce_completeness_ruleset_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>bce_completeness_ruleset_form.bce_completeness_ruleset_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="bce_completeness_ruleset_form_data_source" component="BigCartEnergy_CatalogCompleteness/js/form/provider">
+        <settings>
+            <submitUrl path="bce_completeness/ruleset/save"/>
+        </settings>
+        <dataProvider class="BigCartEnergy\CatalogCompleteness\Ui\DataProvider\RuleSet\Form\DataProvider" name="bce_completeness_ruleset_form_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>ruleset_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general" sortOrder="10">
+        <settings>
+            <label translate="true">General</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+        </settings>
+        <field name="ruleset_id" formElement="hidden">
+            <settings>
+                <dataType>text</dataType>
+                <dataScope>ruleset_id</dataScope>
+            </settings>
+        </field>
+        <field name="name" formElement="input" sortOrder="10">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Name</label>
+                <dataScope>name</dataScope>
+                <placeholder translate="true">For example, Fasteners core content</placeholder>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                    <rule name="max_text_length" xsi:type="number">255</rule>
+                </validation>
+                <imports>
+                    <link name="disabled">${ $.ns }.${ $.ns }.bce_config:bceReadOnly</link>
+                </imports>
+            </settings>
+        </field>
+        <field name="kind" component="BigCartEnergy_CatalogCompleteness/js/form/element/kind" formElement="radioset" sortOrder="20">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="string">attribute_set</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Kind</label>
+                <dataScope>kind</dataScope>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <imports>
+                    <link name="disabled">${ $.ns }.${ $.ns }.bce_config:bceReadOnly</link>
+                </imports>
+            </settings>
+            <formElements>
+                <radioset>
+                    <settings>
+                        <options class="BigCartEnergy\CatalogCompleteness\Model\Source\Kind"/>
+                    </settings>
+                </radioset>
+            </formElements>
+        </field>
+        <field name="attribute_set_ids" component="BigCartEnergy_CatalogCompleteness/js/form/element/attribute-sets" formElement="multiselect" sortOrder="30">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="multiple" xsi:type="boolean">true</item>
+                    <item name="showCheckbox" xsi:type="boolean">true</item>
+                    <item name="chipsEnabled" xsi:type="boolean">true</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="levelsVisibility" xsi:type="number">1</item>
+                    <item name="elementTmpl" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Attribute sets</label>
+                <dataScope>attribute_set_ids</dataScope>
+                <notice translate="true">Choose the attribute sets this rule set covers. An attribute set can belong to one attribute set rule set.</notice>
+                <imports>
+                    <link name="disabled">${ $.ns }.${ $.ns }.bce_config:bceReadOnly</link>
+                    <link name="visible">${ $.ns }.${ $.ns }.general.kind:isAttributeSetKind</link>
+                </imports>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="BigCartEnergy\CatalogCompleteness\Model\Source\AttributeSet"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+        <field name="channel_code" component="BigCartEnergy_CatalogCompleteness/js/form/element/channel" formElement="select" sortOrder="40">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Channel</label>
+                <dataScope>channel_code</dataScope>
+                <notice translate="true">Maps roles such as Brand and GTIN to your own attributes, across every attribute set.</notice>
+                <imports>
+                    <link name="disabled">${ $.ns }.${ $.ns }.bce_config:bceReadOnly</link>
+                    <link name="visible">${ $.ns }.${ $.ns }.general.kind:isChannelKind</link>
+                </imports>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="BigCartEnergy\CatalogCompleteness\Model\Source\Channel"/>
+                        <caption translate="true">Choose a channel</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="description" formElement="textarea" sortOrder="50">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Description</label>
+                <dataScope>description</dataScope>
+                <validation>
+                    <rule name="max_text_length" xsi:type="number">2000</rule>
+                </validation>
+                <imports>
+                    <link name="disabled">${ $.ns }.${ $.ns }.bce_config:bceReadOnly</link>
+                    <link name="visible">${ $.ns }.${ $.ns }.general.kind:isChannelKind</link>
+                </imports>
+            </settings>
+        </field>
+        <field name="is_enabled" formElement="checkbox" sortOrder="60">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Enabled</label>
+                <dataScope>is_enabled</dataScope>
+                <imports>
+                    <link name="disabled">${ $.ns }.${ $.ns }.bce_config:bceReadOnly</link>
+                </imports>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>toggle</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="string">0</map>
+                            <map name="true" xsi:type="string">1</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+    </fieldset>
+    <fieldset name="rules_fieldset" sortOrder="20">
+        <settings>
+            <label translate="true">Rules</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+        </settings>
+        <dynamicRows name="rules" component="BigCartEnergy_CatalogCompleteness/js/form/rules" template="BigCartEnergy_CatalogCompleteness/form/rules" sortOrder="10">
+            <settings>
+                <addButton>false</addButton>
+                <columnsHeader>false</columnsHeader>
+                <dndConfig>
+                    <param name="enabled" xsi:type="boolean">true</param>
+                </dndConfig>
+                <label/>
+                <componentType>dynamicRows</componentType>
+                <imports>
+                    <link name="disabled">${ $.ns }.${ $.ns }.bce_config:bceReadOnly</link>
+                </imports>
+            </settings>
+            <container name="record" component="BigCartEnergy_CatalogCompleteness/js/form/rules-record">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="isTemplate" xsi:type="boolean">true</item>
+                        <item name="is_collection" xsi:type="boolean">true</item>
+                        <item name="componentType" xsi:type="string">container</item>
+                        <item name="template" xsi:type="string">BigCartEnergy_CatalogCompleteness/form/rule-row</item>
+                    </item>
+                </argument>
+                <field name="rule_id" formElement="hidden">
+                    <settings>
+                        <dataType>text</dataType>
+                        <dataScope>rule_id</dataScope>
+                    </settings>
+                </field>
+                <field name="position" formElement="hidden">
+                    <settings>
+                        <dataType>text</dataType>
+                        <dataScope>position</dataScope>
+                    </settings>
+                </field>
+                <field name="role" component="BigCartEnergy_CatalogCompleteness/js/form/element/role" template="BigCartEnergy_CatalogCompleteness/form/cell" formElement="select">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Role</label>
+                        <dataScope>role</dataScope>
+                    </settings>
+                    <formElements>
+                        <select>
+                            <settings>
+                                <options class="BigCartEnergy\CatalogCompleteness\Model\Source\Role"/>
+                                <caption translate="true">Custom</caption>
+                            </settings>
+                        </select>
+                    </formElements>
+                </field>
+                <field name="attribute_code" component="BigCartEnergy_CatalogCompleteness/js/form/element/attribute-picker" template="BigCartEnergy_CatalogCompleteness/form/cell" formElement="input">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="elementTmpl" xsi:type="string">BigCartEnergy_CatalogCompleteness/form/element/attribute-picker</item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Attribute</label>
+                        <dataScope>attribute_code</dataScope>
+                    </settings>
+                </field>
+                <field name="rule_type" component="BigCartEnergy_CatalogCompleteness/js/form/element/rule-type" template="BigCartEnergy_CatalogCompleteness/form/cell" formElement="select">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Rule</label>
+                        <dataScope>rule_type</dataScope>
+                        <validation>
+                            <rule name="required-entry" xsi:type="boolean">true</rule>
+                        </validation>
+                    </settings>
+                    <formElements>
+                        <select>
+                            <settings>
+                                <options class="BigCartEnergy\CatalogCompleteness\Model\Source\RuleType"/>
+                                <caption translate="true">Choose a rule</caption>
+                            </settings>
+                        </select>
+                    </formElements>
+                </field>
+                <field name="parameter" component="BigCartEnergy_CatalogCompleteness/js/form/element/parameter" template="BigCartEnergy_CatalogCompleteness/form/cell" formElement="input">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="elementTmpl" xsi:type="string">BigCartEnergy_CatalogCompleteness/form/element/parameter</item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Parameter</label>
+                        <dataScope>parameter</dataScope>
+                    </settings>
+                </field>
+                <field name="weight" component="BigCartEnergy_CatalogCompleteness/js/form/element/weight" template="BigCartEnergy_CatalogCompleteness/form/cell" formElement="select">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Weight</label>
+                        <dataScope>weight</dataScope>
+                    </settings>
+                    <formElements>
+                        <select>
+                            <settings>
+                                <options class="BigCartEnergy\CatalogCompleteness\Model\Source\Weight"/>
+                                <caption translate="true">Choose…</caption>
+                            </settings>
+                        </select>
+                    </formElements>
+                </field>
+                <field name="applies_to" component="BigCartEnergy_CatalogCompleteness/js/form/element/type-chips" template="BigCartEnergy_CatalogCompleteness/form/cell" formElement="checkboxset">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="elementTmpl" xsi:type="string">BigCartEnergy_CatalogCompleteness/form/element/type-chips</item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Applies to product types</label>
+                        <dataScope>applies_to</dataScope>
+                    </settings>
+                    <formElements>
+                        <checkboxset>
+                            <settings>
+                                <options class="BigCartEnergy\CatalogCompleteness\Model\Source\ProductType"/>
+                            </settings>
+                        </checkboxset>
+                    </formElements>
+                </field>
+            </container>
+        </dynamicRows>
+    </fieldset>
+</form>

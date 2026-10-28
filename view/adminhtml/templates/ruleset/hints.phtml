@@ -1,0 +1,32 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Editor $editor */
+$editor = $block->getData('editor');
+?>
+<?php if ($editor->canEdit()): ?>
+<div class="bce-completeness-hints" data-role="bce-hints" data-bind="scope: 'bceCompletenessHints'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+<script type="text/x-magento-init">
+{
+    "[data-role=bce-hints]": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "bceCompletenessHints": {
+                    "component": "BigCartEnergy_CatalogCompleteness/js/form/hints",
+                    "template": "BigCartEnergy_CatalogCompleteness/form/hints",
+                    "__disableTmpl": true,
+                    "ignoreTmpls": {"lists": true},
+                    "lists": <?= /* @noEscape */ $editor->getHintsJson() ?>
+                }
+            }
+        }
+    }
+}
+</script>
+<?php endif; ?>

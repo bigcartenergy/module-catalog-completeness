@@ -1,0 +1,130 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard $dashboard */
+$dashboard = $block->getData('dashboard');
+$state = $dashboard->getState();
+$vm = \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard::class;
+?>
+<div class="bce-completeness-dashboard" data-role="bce-completeness-dashboard">
+    <?= $block->getChildHtml('status') ?>
+
+    <?php if ($state === $vm::STATE_FIRST_RUN): ?>
+        <section class="bce-completeness-firstrun" aria-labelledby="bce-completeness-firstrun-title">
+            <h2 id="bce-completeness-firstrun-title" class="bce-completeness-firstrun__title"><?= $block->escapeHtml(__('Create a rule set to start scoring your catalog')) ?></h2>
+            <p class="bce-completeness-firstrun__lead"><?= $block->escapeHtml(__('Catalog Completeness scores every product from 0 to 100 against the rules you set, then lists the products to fix first.')) ?></p>
+            <ol class="bce-completeness-firstrun__steps">
+                <li>
+                    <span class="bce-completeness-firstrun__step">1</span>
+                    <strong><?= $block->escapeHtml(__('Say what a complete product needs')) ?></strong>
+                    <span><?= $block->escapeHtml(__('Choose the attribute sets a rule set covers and the attributes each product must have, such as a description of at least 200 characters.')) ?></span>
+                </li>
+                <li>
+                    <span class="bce-completeness-firstrun__step">2</span>
+                    <strong><?= $block->escapeHtml(__('Weigh each rule')) ?></strong>
+                    <span><?= $block->escapeHtml(__('Mark rules Required, Important or Nice to have. The editor shows each rule\'s share of the score and previews it on a real product.')) ?></span>
+                </li>
+                <li>
+                    <span class="bce-completeness-firstrun__step">3</span>
+                    <strong><?= $block->escapeHtml(__('Recalculate and work the list')) ?></strong>
+                    <span><?= $block->escapeHtml(__('Scores appear on this page with the weakest products first. Export the list as CSV for whoever does the data entry.')) ?></span>
+                </li>
+            </ol>
+            <?php if ($dashboard->canEditRuleSets()): ?>
+                <div class="bce-completeness-firstrun__actions">
+                    <a class="action-primary" href="<?= $block->escapeUrl($dashboard->getNewRuleSetUrl()) ?>"><span><?= $block->escapeHtml(__('Create a rule set')) ?></span></a>
+                </div>
+                <p class="bce-completeness-firstrun__note"><?= $block->escapeHtml(__('Nothing is pre-set: you choose which attributes belong to a rule set, one rule at a time. The editor suggests common fields for each kind and channel; nothing is added until you click Add.')) ?></p>
+            <?php endif; ?>
+        </section>
+    <?php elseif ($state === $vm::STATE_UNCOVERED): ?>
+        <?= $block->getChildHtml('filters') ?>
+        <?php $uncovered = $dashboard->countUncovered(); ?>
+        <section class="bce-completeness-zero bce-completeness-uncovered" aria-labelledby="bce-completeness-uncovered-title">
+            <h2 id="bce-completeness-uncovered-title" class="bce-completeness-zero__title"><?= $block->escapeHtml($uncovered === 0
+                ? __('Every product here has rules assigned')
+                : ($uncovered === 1
+                    ? __('1 product has no rules assigned')
+                    : __('%1 products have no rules assigned', $dashboard->formatNumber($uncovered)))) ?></h2>
+            <p><?= $block->escapeHtml($uncovered === 0
+                ? __('A rule covers every product this scope and these filters keep, so each one carries a score.')
+                : $dashboard->describeUncoveredScope()) ?></p>
+            <p>
+                <a href="<?= $block->escapeUrl($dashboard->getCoverageUrl(false)) ?>"><?= $block->escapeHtml(__('Back to the scored products')) ?></a>
+                <span aria-hidden="true">·</span>
+                <a href="<?= $block->escapeUrl($dashboard->getManageUrl()) ?>"><?= $block->escapeHtml(__('Manage rule sets')) ?></a>
+            </p>
+        </section>
+        <?php if ($uncovered > 0): ?>
+            <section class="bce-completeness-worklist-section" id="bce-completeness-worklist" aria-labelledby="bce-completeness-worklist-title">
+                <div class="bce-completeness-worklist-section__head">
+                    <h2 id="bce-completeness-worklist-title" class="bce-completeness-section-title"><?= $block->escapeHtml(__('Products with no rules assigned')) ?></h2>
+                    <span class="bce-completeness-muted"><?= $block->escapeHtml(__('Export CSV lists them for whoever assigns attribute sets or writes the rules. Recalculating them gives no score until a rule covers them.')) ?></span>
+                </div>
+                <?= $block->getChildHtml('worklist') ?>
+            </section>
+        <?php endif; ?>
+    <?php elseif ($state === $vm::STATE_NEVER): ?>
+        <div class="message message-info bce-completeness-never" role="status">
+            <strong class="bce-completeness-never__title"><?= $block->escapeHtml(__('Scores have not been calculated yet')) ?></strong>
+            <span><?= $block->escapeHtml(__(
+                '%1 rule sets are ready and cover %2 enabled products. Calculating runs in the background and takes a few minutes; you can leave this page while it runs.',
+                $dashboard->formatNumber($dashboard->countEnabledRuleSets()),
+                $dashboard->formatNumber($dashboard->countCoveredProducts())
+            )) ?></span>
+            <?php if ($dashboard->canRecalculate()): ?>
+                <div class="bce-completeness-never__actions">
+                    <button type="button" class="action-primary" data-role="bce-recalculate-primary"><span><?= $block->escapeHtml(__('Recalculate')) ?></span></button>
+                </div>
+            <?php endif; ?>
+            <p class="bce-completeness-never__note"><?= $block->escapeHtml(__('If nothing happens after a few minutes, make sure cron runs the queue consumer, or run bin/magento bce:completeness:recalculate from the command line.')) ?></p>
+        </div>
+    <?php else: ?>
+        <?= $block->getChildHtml('filters') ?>
+        <?php $uncovered = $state === $vm::STATE_CALCULATING ? 0 : $dashboard->countUncovered(); ?>
+        <?php if ($uncovered > 0): ?>
+            <div class="message message-info bce-completeness-uncovered-note" role="status">
+                <span><?= $block->escapeHtml($uncovered === 1
+                    ? __('1 product in this view has no rules assigned, so no score measures it.')
+                    : __('%1 products in this view have no rules assigned, so no score measures them.', $dashboard->formatNumber($uncovered))) ?></span>
+                <a href="<?= $block->escapeUrl($dashboard->getCoverageUrl(true)) ?>"><?= $block->escapeHtml($uncovered === 1 ? __('View it') : __('View them')) ?></a>
+            </div>
+        <?php endif; ?>
+        <?php if ($state === $vm::STATE_CALCULATING): ?>
+            <section class="bce-completeness-zero bce-completeness-zero--calculating" aria-labelledby="bce-completeness-zero-title" aria-busy="true">
+                <h2 id="bce-completeness-zero-title" class="bce-completeness-zero__title"><?= $block->escapeHtml(__('Scores are being calculated')) ?></h2>
+                <p><?= $block->escapeHtml(__('The first run is in progress. The tiles, the breakdown and the work list fill in when it finishes; this page then refreshes itself.')) ?></p>
+            </section>
+        <?php elseif ($state === $vm::STATE_ZERO): ?>
+            <section class="bce-completeness-zero" aria-labelledby="bce-completeness-zero-title">
+                <h2 id="bce-completeness-zero-title" class="bce-completeness-zero__title"><?= $block->escapeHtml(__('No products match these filters')) ?></h2>
+                <p><?= $block->escapeHtml($dashboard->describeActiveFilters()) ?></p>
+                <a class="action-secondary" href="<?= $block->escapeUrl($dashboard->getClearUrl()) ?>"><span><?= $block->escapeHtml(__('Clear all filters')) ?></span></a>
+            </section>
+        <?php else: ?>
+            <?= $block->getChildHtml('tiles') ?>
+            <?= $block->getChildHtml('cards') ?>
+            <section class="bce-completeness-worklist-section" id="bce-completeness-worklist" aria-labelledby="bce-completeness-worklist-title">
+                <div class="bce-completeness-worklist-section__head">
+                    <h2 id="bce-completeness-worklist-title" class="bce-completeness-section-title"><?= $block->escapeHtml(__('Work list')) ?></h2>
+                    <span class="bce-completeness-muted"><?= $block->escapeHtml(__('Lowest scores first. Hand it to whoever does the data entry with Export CSV or Export selected.')) ?></span>
+                </div>
+                <?= $block->getChildHtml('worklist') ?>
+            </section>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
+<script type="text/x-magento-init">
+{
+    "[data-role=bce-completeness-dashboard]": {
+        "BigCartEnergy_CatalogCompleteness/js/dashboard/status": <?= /* @noEscape */ $dashboard->getJsConfig() ?>
+    },
+    "*": {
+        "BigCartEnergy_CatalogCompleteness/js/dashboard/filters": {}
+    }
+}
+</script>

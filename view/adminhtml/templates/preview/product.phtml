@@ -1,0 +1,36 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\ProductPanel $panel */
+/** @var \BigCartEnergy\Core\ViewModel\Brand $brand */
+$panel = $block->getData('panel');
+$brand = $block->getData('brand');
+?>
+<?php if ($panel->isVisible() && $panel->getRuleSets()): ?>
+<div class="bce-completeness-panel-host bce-completeness-panel-host--product" data-role="bce-preview-product" data-bind="scope: 'bceCompletenessProductPanel'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+<script type="text/x-magento-init">
+{
+    "[data-role=bce-preview-product]": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "bceCompletenessProductPanel": {
+                    "component": "BigCartEnergy_CatalogCompleteness/js/preview/panel",
+                    "template": "BigCartEnergy_CatalogCompleteness/preview/panel",
+                    "context": "product",
+                    "__disableTmpl": true,
+                    "ignoreTmpls": {"panelConfig": true, "markSvg": true},
+                    "markSvg": <?= /* @noEscape */ json_encode($brand->getMarkSvg(16)) ?>,
+                    "panelConfig": <?= /* @noEscape */ $panel->getJsConfig() ?>
+                }
+            }
+        }
+    }
+}
+</script>
+<?php endif; ?>

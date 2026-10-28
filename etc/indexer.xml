@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <indexer id="bce_completeness_score" view_id="bce_completeness_score" class="BigCartEnergy\CatalogCompleteness\Model\Indexer\ScoreIndexer">
+        <title translate="true">Catalog completeness score</title>
+        <description translate="true">Scores every product against its attribute set rules and the channel profiles (Big Cart Energy Catalog Completeness)</description>
+    </indexer>
+</config>

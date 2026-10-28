@@ -1,0 +1,57 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Editor $editor */
+$editor = $block->getData('editor');
+$saved = $editor->getSavedState();
+$status = $editor->getStatus();
+$run = is_array($status['run']) ? $status['run'] : [];
+$affected = $editor->products($editor->getAffectedCount());
+?>
+<div class="bce-completeness-editor-messages" data-role="bce-editor-messages">
+    <?php if (!$editor->canEdit()): ?>
+        <div class="message message-info" role="status">
+            <?= $block->escapeHtml(__('You can view this rule set but not change it. Editing needs the')) ?>
+            <strong><?= $block->escapeHtml(__('Edit rule sets')) ?></strong>
+            <?= $block->escapeHtml(__('permission for PIM: Catalog Completeness, which an administrator grants under User Roles.')) ?>
+        </div>
+    <?php endif; ?>
+    <div class="message message-success" role="status" data-role="bce-saved-recalculating"<?= $saved === 'recalculating' ? '' : ' hidden' ?>>
+        <div>
+            <strong><?= $block->escapeHtml(__('You saved the rule set.')) ?></strong>
+            <span data-role="bce-rescore-text"><?= $block->escapeHtml(__(
+                'Rescoring %1: %2 done (%3 %). The dashboard updates when this finishes; you can keep editing or leave this page.',
+                $affected,
+                number_format((int)($run['done'] ?? 0)),
+                (int)($run['percent'] ?? 0)
+            )) ?></span>
+        </div>
+        <div class="bce-completeness-progress" role="progressbar" aria-label="<?= $block->escapeHtmlAttr(__('Rescore progress')) ?>" aria-valuemin="0" aria-valuemax="<?= (int)($run['total'] ?? $editor->getAffectedCount()) ?>" aria-valuenow="<?= (int)($run['done'] ?? 0) ?>" data-role="bce-rescore-bar">
+            <div class="bce-completeness-progress__fill" style="width: <?= (int)($run['percent'] ?? 0) ?>%" data-role="bce-rescore-fill"></div>
+        </div>
+    </div>
+    <div class="message message-success" role="status" data-role="bce-saved-done" hidden>
+        <strong><?= $block->escapeHtml(__('You saved the rule set.')) ?></strong>
+        <span><?= $block->escapeHtml(__('Rescoring finished. The dashboard shows the new scores.')) ?></span>
+    </div>
+    <div class="message message-warning" role="status" data-role="bce-saved-stale"<?= $saved === 'stale' ? '' : ' hidden' ?>>
+        <div>
+            <strong><?= $block->escapeHtml(__('Saved without recalculating')) ?></strong>
+            <span><?= $block->escapeHtml(__('Scores for %1 still use the previous rules. They update at the next scheduled run, or when you recalculate.', $affected)) ?></span>
+        </div>
+        <?php if ($editor->canRecalculate() && $editor->getRuleSetId() > 0): ?>
+            <button type="button" class="action-secondary" data-role="bce-recalculate-now" data-ruleset-id="<?= (int)$editor->getRuleSetId() ?>"><span><?= $block->escapeHtml(__('Recalculate now')) ?></span></button>
+        <?php endif; ?>
+    </div>
+</div>
+<script type="text/x-magento-init">
+{
+    "[data-role=bce-editor-messages]": {
+        "BigCartEnergy_CatalogCompleteness/js/form/editor": <?= /* @noEscape */ $editor->getJsConfig() ?>
+    }
+}
+</script>

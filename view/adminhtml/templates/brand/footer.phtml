@@ -1,0 +1,14 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\Core\ViewModel\Brand $brand */
+$brand = $block->getData('brand');
+?>
+<footer class="bce-brand-footer bce-completeness-footer">
+    <?= /* @noEscape */ $brand->getMarkSvg(20) ?>
+    <span><?= $block->escapeHtml(__('Catalog Completeness by')) ?> <a href="<?= $block->escapeUrl($brand->getSiteUrl()) ?>" target="_blank" rel="noopener"><?= $block->escapeHtml($brand->getName()) ?></a></span>
+</footer>

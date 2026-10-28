@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="bce_completeness_ruleset" resource="default" engine="innodb" comment="Catalog completeness rule sets">
+        <column xsi:type="int" name="ruleset_id" unsigned="true" nullable="false" identity="true" comment="Rule set ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Name"/>
+        <column xsi:type="varchar" name="kind" nullable="false" length="32" default="attribute_set" comment="Kind: attribute_set or channel"/>
+        <column xsi:type="varchar" name="channel_code" nullable="true" length="32" comment="Channel code for channel profiles"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Description"/>
+        <column xsi:type="smallint" name="is_enabled" unsigned="true" nullable="false" default="1" comment="Is enabled"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="ruleset_id"/>
+        </constraint>
+        <index referenceId="BCE_CMPL_RULESET_KIND_IS_ENABLED" indexType="btree">
+            <column name="kind"/>
+            <column name="is_enabled"/>
+        </index>
+    </table>
+    <table name="bce_completeness_ruleset_attribute_set" resource="default" engine="innodb" comment="Attribute sets covered by a rule set">
+        <column xsi:type="int" name="ruleset_id" unsigned="true" nullable="false" comment="Rule set ID"/>
+        <column xsi:type="smallint" name="attribute_set_id" padding="5" unsigned="true" nullable="false" comment="Attribute set ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="ruleset_id"/>
+            <column name="attribute_set_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_RS_ATTR_SET_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID" table="bce_completeness_ruleset_attribute_set" column="ruleset_id" referenceTable="bce_completeness_ruleset" referenceColumn="ruleset_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_RS_ATTR_SET_ATTR_SET_ID_EAV_ATTR_SET_ATTR_SET_ID" table="bce_completeness_ruleset_attribute_set" column="attribute_set_id" referenceTable="eav_attribute_set" referenceColumn="attribute_set_id" onDelete="CASCADE"/>
+        <index referenceId="BCE_CMPL_RS_ATTR_SET_ATTRIBUTE_SET_ID" indexType="btree">
+            <column name="attribute_set_id"/>
+        </index>
+    </table>
+    <table name="bce_completeness_rule" resource="default" engine="innodb" comment="Catalog completeness rules">
+        <column xsi:type="int" name="rule_id" unsigned="true" nullable="false" identity="true" comment="Rule ID"/>
+        <column xsi:type="int" name="ruleset_id" unsigned="true" nullable="false" comment="Rule set ID"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort order"/>
+        <column xsi:type="varchar" name="role" nullable="true" length="64" comment="Channel role code"/>
+        <column xsi:type="varchar" name="attribute_code" nullable="false" length="255" default="" comment="Product attribute code"/>
+        <column xsi:type="varchar" name="rule_type" nullable="false" length="32" comment="Rule type"/>
+        <column xsi:type="text" name="parameter" nullable="true" comment="Rule parameter"/>
+        <column xsi:type="smallint" name="weight" unsigned="true" nullable="false" default="1" comment="Weight: 3 required, 2 important, 1 nice to have"/>
+        <column xsi:type="varchar" name="applies_to" nullable="false" length="255" default="" comment="Comma list of product type ids; empty means all"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_RULE_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID" table="bce_completeness_rule" column="ruleset_id" referenceTable="bce_completeness_ruleset" referenceColumn="ruleset_id" onDelete="CASCADE"/>
+        <index referenceId="BCE_CMPL_RULE_RULESET_ID_SORT_ORDER" indexType="btree">
+            <column name="ruleset_id"/>
+            <column name="sort_order"/>
+        </index>
+    </table>
+    <table name="bce_completeness_score" resource="default" engine="innodb" comment="Catalog completeness scores per product and rule set">
+        <column xsi:type="int" name="score_id" unsigned="true" nullable="false" identity="true" comment="Score row ID"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product entity ID"/>
+        <column xsi:type="int" name="ruleset_id" unsigned="true" nullable="false" comment="Rule set ID"/>
+        <column xsi:type="smallint" name="is_primary" unsigned="true" nullable="false" default="0" comment="1 for the attribute set rule set, 0 for channel profiles"/>
+        <column xsi:type="smallint" name="score" unsigned="true" nullable="true" comment="Score 0 to 100, null when no rule applies"/>
+        <column xsi:type="int" name="passed_weight" unsigned="true" nullable="false" default="0" comment="Sum of weights of passed rules"/>
+        <column xsi:type="int" name="total_weight" unsigned="true" nullable="false" default="0" comment="Sum of weights of applicable rules"/>
+        <column xsi:type="text" name="missing" nullable="true" comment="JSON array of failed rule ids in rule set order"/>
+        <column xsi:type="timestamp" name="scored_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Scored at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="score_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="BCE_CMPL_SCORE_PRODUCT_ID_RULESET_ID">
+            <column name="product_id"/>
+            <column name="ruleset_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_SCORE_PRODUCT_ID_CAT_PRD_ENTT_ENTT_ID" table="bce_completeness_score" column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_SCORE_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID" table="bce_completeness_score" column="ruleset_id" referenceTable="bce_completeness_ruleset" referenceColumn="ruleset_id" onDelete="CASCADE"/>
+        <index referenceId="BCE_CMPL_SCORE_RULESET_ID_SCORE" indexType="btree">
+            <column name="ruleset_id"/>
+            <column name="score"/>
+        </index>
+        <index referenceId="BCE_CMPL_SCORE_IS_PRIMARY_SCORE" indexType="btree">
+            <column name="is_primary"/>
+            <column name="score"/>
+        </index>
+    </table>
+    <table name="bce_completeness_failure" resource="default" engine="innodb" comment="Rules a product fails, per rule set">
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product entity ID"/>
+        <column xsi:type="int" name="ruleset_id" unsigned="true" nullable="false" comment="Rule set ID"/>
+        <column xsi:type="int" name="rule_id" unsigned="true" nullable="false" comment="Rule ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="product_id"/>
+            <column name="ruleset_id"/>
+            <column name="rule_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_FAILURE_PRODUCT_ID_CAT_PRD_ENTT_ENTT_ID" table="bce_completeness_failure" column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_FAILURE_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID" table="bce_completeness_failure" column="ruleset_id" referenceTable="bce_completeness_ruleset" referenceColumn="ruleset_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_FAILURE_RULE_ID_BCE_CMPL_RULE_RULE_ID" table="bce_completeness_failure" column="rule_id" referenceTable="bce_completeness_rule" referenceColumn="rule_id" onDelete="CASCADE"/>
+        <index referenceId="BCE_CMPL_FAILURE_RULESET_ID_RULE_ID" indexType="btree">
+            <column name="ruleset_id"/>
+            <column name="rule_id"/>
+        </index>
+        <index referenceId="BCE_CMPL_FAILURE_RULE_ID" indexType="btree">
+            <column name="rule_id"/>
+        </index>
+    </table>
+    <table name="bce_completeness_run" resource="default" engine="innodb" comment="Catalog completeness recalculation runs">
+        <column xsi:type="int" name="run_id" unsigned="true" nullable="false" identity="true" comment="Run ID"/>
+        <column xsi:type="int" name="ruleset_id" unsigned="true" nullable="true" comment="Rule set ID, null for all"/>
+        <column xsi:type="mediumtext" name="product_ids" nullable="true" comment="JSON array of product ids for a partial run, null for all products"/>
+        <column xsi:type="varchar" name="state" nullable="false" length="16" default="queued" comment="queued, running, done or failed"/>
+        <column xsi:type="int" name="total" unsigned="true" nullable="false" default="0" comment="Products to score"/>
+        <column xsi:type="int" name="done" unsigned="true" nullable="false" default="0" comment="Products scored so far"/>
+        <column xsi:type="text" name="message" nullable="true" comment="Exception message of a failed run"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Queued at"/>
+        <column xsi:type="timestamp" name="started_at" on_update="false" nullable="true" comment="Started at"/>
+        <column xsi:type="timestamp" name="finished_at" on_update="false" nullable="true" comment="Finished at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="run_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="BCE_CMPL_RUN_RULESET_ID_BCE_CMPL_RULESET_RULESET_ID" table="bce_completeness_run" column="ruleset_id" referenceTable="bce_completeness_ruleset" referenceColumn="ruleset_id" onDelete="CASCADE"/>
+        <index referenceId="BCE_CMPL_RUN_STATE_RUN_ID" indexType="btree">
+            <column name="state"/>
+            <column name="run_id"/>
+        </index>
+    </table>
+</schema>

@@ -1,0 +1,73 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Dashboard $dashboard */
+$dashboard = $block->getData('dashboard');
+$filter = $dashboard->getFilter();
+$filterClass = \BigCartEnergy\CatalogCompleteness\Model\Dashboard\Filter::class;
+$selects = [
+    ['attribute_set', $filterClass::PARAM_ATTRIBUTE_SET, __('Attribute set'), __('All attribute sets'), $filter->getAttributeSetId() === null ? '' : (string)$filter->getAttributeSetId()],
+    ['category', $filterClass::PARAM_CATEGORY, __('Category'), __('All categories'), $filter->getCategoryId() === null ? '' : (string)$filter->getCategoryId()],
+    ['brand', $filterClass::PARAM_BRAND, __('Brand'), __('All brands'), $filter->getBrand() === null ? '' : $filter->getBrand()],
+    ['type', $filterClass::PARAM_TYPE, __('Product type'), __('All types'), $filter->getTypeId() ?? ''],
+    ['band', $filterClass::PARAM_BAND, __('Band'), __('All bands'), $filter->getBand() ?? ''],
+];
+$active = $dashboard->getActiveFilters();
+?>
+<section class="bce-completeness-filters" aria-label="<?= $block->escapeHtmlAttr(__('Filters')) ?>">
+    <form method="get" action="<?= $block->escapeUrl($dashboard->getDashboardUrl()) ?>" data-role="bce-filter-form" class="bce-completeness-filters__form">
+        <?php if ($filter->getRulesetId() !== null): ?>
+            <input type="hidden" name="scope" value="<?= (int)$filter->getRulesetId() ?>">
+        <?php endif; ?>
+        <?php if ($filter->getTile() !== null): ?>
+            <input type="hidden" name="tile" value="<?= $block->escapeHtmlAttr($filter->getTile()) ?>">
+        <?php endif; ?>
+        <?php if ($filter->getRuleId() !== null): ?>
+            <input type="hidden" name="rule" value="<?= (int)$filter->getRuleId() ?>">
+        <?php endif; ?>
+        <?php if ($filter->isUncoveredOnly()): ?>
+            <input type="hidden" name="coverage" value="<?= $block->escapeHtmlAttr($filterClass::COVERAGE_NONE) ?>">
+        <?php endif; ?>
+        <?php if ($dashboard->getBreakdownBy() !== 'set'): ?>
+            <input type="hidden" name="by" value="<?= $block->escapeHtmlAttr($dashboard->getBreakdownBy()) ?>">
+        <?php endif; ?>
+        <div class="bce-completeness-filters__grid">
+            <?php foreach ($selects as [$options, $param, $label, $caption, $current]): ?>
+                <div class="bce-completeness-filters__field">
+                    <label class="bce-completeness-filters__label" for="bce-filter-<?= $block->escapeHtmlAttr($param) ?>"><?= $block->escapeHtml($label) ?></label>
+                    <select id="bce-filter-<?= $block->escapeHtmlAttr($param) ?>" name="<?= $block->escapeHtmlAttr($param) ?>" class="admin__control-select" data-role="bce-autosubmit"<?= $param === $filterClass::PARAM_BAND && $filter->isUncoveredOnly() ? ' disabled' : '' ?>>
+                        <option value=""><?= $block->escapeHtml($caption) ?></option>
+                        <?php foreach ($dashboard->getOptions($options) as $option): ?>
+                            <?php $value = $param === $filterClass::PARAM_BRAND ? $filterClass::encodeBrand($option['value']) : $option['value']; ?>
+                            <option value="<?= $block->escapeHtmlAttr($value) ?>"<?= $option['value'] === $current ? ' selected' : '' ?>><?= $block->escapeHtml($option['label']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            <?php endforeach; ?>
+            <div class="bce-completeness-filters__switch admin__actions-switch" data-role="switcher">
+                <input type="hidden" name="enabled" value="no">
+                <input type="checkbox" class="admin__actions-switch-checkbox" id="bce-filter-enabled" name="enabled" value="yes" data-role="bce-autosubmit"<?= $filter->isEnabledOnly() ? ' checked' : '' ?>>
+                <label class="admin__actions-switch-label" for="bce-filter-enabled">
+                    <span class="admin__actions-switch-text" data-text-on="<?= $block->escapeHtmlAttr(__('Enabled products only')) ?>" data-text-off="<?= $block->escapeHtmlAttr(__('Enabled products only')) ?>"></span>
+                </label>
+            </div>
+        </div>
+        <noscript><button type="submit" class="action-secondary"><span><?= $block->escapeHtml(__('Apply filters')) ?></span></button></noscript>
+    </form>
+    <?php if ($active): ?>
+        <div class="bce-completeness-filters__active">
+            <span class="bce-completeness-filters__active-label"><?= $block->escapeHtml(__('Active filters:')) ?></span>
+            <?php foreach ($active as $chip): ?>
+                <span class="bce-completeness-filter-chip">
+                    <span><?= $block->escapeHtml($chip['label']) ?>: <strong><?= $block->escapeHtml($chip['value']) ?></strong></span>
+                    <a class="bce-completeness-filter-chip__remove" href="<?= $block->escapeUrl($chip['url']) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Remove filter %1', $chip['label'])) ?>">&times;</a>
+                </span>
+            <?php endforeach; ?>
+            <a class="bce-completeness-filters__clear" href="<?= $block->escapeUrl($dashboard->getClearUrl()) ?>"><?= $block->escapeHtml(__('Clear all')) ?></a>
+        </div>
+    <?php endif; ?>
+</section>

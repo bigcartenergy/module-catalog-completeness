@@ -1,0 +1,33 @@
+<?php
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \BigCartEnergy\CatalogCompleteness\ViewModel\Editor $editor */
+$editor = $block->getData('editor');
+?>
+<?php if ($editor->canEdit()): ?>
+<div class="bce-completeness-panel-host" data-role="bce-preview-editor" data-bind="scope: 'bceCompletenessPreview'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+<script type="text/x-magento-init">
+{
+    "[data-role=bce-preview-editor]": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "bceCompletenessPreview": {
+                    "component": "BigCartEnergy_CatalogCompleteness/js/preview/panel",
+                    "template": "BigCartEnergy_CatalogCompleteness/preview/panel",
+                    "context": "editor",
+                    "__disableTmpl": true,
+                    "ignoreTmpls": {"panelConfig": true},
+                    "panelConfig": <?= /* @noEscape */ $editor->getJsConfig() ?>
+                }
+            }
+        }
+    }
+}
+</script>
+<?php endif; ?>

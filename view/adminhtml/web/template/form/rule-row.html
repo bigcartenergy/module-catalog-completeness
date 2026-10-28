@@ -1,0 +1,50 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<tr class="data-row bce-completeness-rule-row" data-bind="css: {'_edited': isEdited(), '_error': errors().length > 0}, attr: {'data-bce-record': name}">
+    <td if="$parent.dndConfig.enabled" class="col-draggable" template="name: $parent.dndConfig.template, data: $parent.dnd"></td>
+    <td>
+        <div class="bce-completeness-rules__grid" data-bind="css: {'bce-completeness-rules__grid--role': $parent.hasRole()}">
+            <!-- ko if: $parent.hasRole() -->
+            <!-- ko with: getChild('role') --><!-- ko template: template --><!-- /ko --><!-- /ko -->
+            <!-- /ko -->
+            <!-- ko with: getChild('attribute_code') --><!-- ko template: template --><!-- /ko --><!-- /ko -->
+            <!-- ko with: getChild('rule_type') --><!-- ko template: template --><!-- /ko --><!-- /ko -->
+            <!-- ko with: getChild('parameter') --><!-- ko template: template --><!-- /ko --><!-- /ko -->
+            <!-- ko with: getChild('weight') --><!-- ko template: template --><!-- /ko --><!-- /ko -->
+            <div class="bce-completeness-rules__share" data-bind="text: share(), css: {'bce-completeness-rules__share--none': !hasWeight()}"></div>
+            <div>
+                <!-- ko ifnot: $parent.disabled() -->
+                <button type="button" class="bce-completeness-rules__remove" data-bind="click: $parent.deleteRecord.bind($parent, index, recordId), attr: {'aria-label': $t('Remove rule'), 'data-action': 'remove_row'}">
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.7 8.5h5.6l.7-8.5" fill="none" stroke="currentColor" stroke-width="1.4"></path></svg>
+                </button>
+                <span class="bce-completeness-rules__order">
+                    <button type="button" class="bce-completeness-rules__move" data-bind="click: function () { $parent.moveRecord($data, -1); }, attr: {'aria-label': $t('Move rule up')}">▲</button>
+                    <button type="button" class="bce-completeness-rules__move" data-bind="click: function () { $parent.moveRecord($data, 1); }, attr: {'aria-label': $t('Move rule down')}">▼</button>
+                </span>
+                <!-- /ko -->
+            </div>
+            <div class="bce-completeness-rules__line2">
+                <!-- ko with: getChild('applies_to') --><!-- ko template: template --><!-- /ko --><!-- /ko -->
+                <!-- ko if: isEdited() -->
+                <span class="bce-completeness-rules__edited"><span aria-hidden="true">●</span> <span data-bind="i18n: 'Edited'"></span></span>
+                <!-- /ko -->
+            </div>
+            <!-- ko foreach: errors -->
+            <div class="bce-completeness-rules__row-message bce-completeness-rules__row-message--error">
+                <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM7.2 4h1.6v5H7.2zm0 6.2h1.6v1.6H7.2z" fill="currentColor" fill-rule="evenodd"></path></svg>
+                <span data-bind="text: message"></span>
+            </div>
+            <!-- /ko -->
+            <!-- ko if: warning() -->
+            <div class="bce-completeness-rules__row-message bce-completeness-rules__row-message--warning">
+                <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.2l7.2 13.1H.8zM7.2 5.6h1.6v4.6H7.2zm0 5.8h1.6V13H7.2z" fill="#8a5600" fill-rule="evenodd"></path></svg>
+                <span data-bind="text: warning()"></span>
+            </div>
+            <!-- /ko -->
+        </div>
+    </td>
+</tr>

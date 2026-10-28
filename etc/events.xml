@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_product_save_after">
+        <observer name="bce_completeness_reindex_product_on_save" instance="BigCartEnergy\CatalogCompleteness\Observer\ReindexProductOnSave"/>
+    </event>
+    <event name="catalog_product_import_bunch_save_after">
+        <observer name="bce_completeness_reindex_after_import" instance="BigCartEnergy\CatalogCompleteness\Observer\ReindexAfterImport"/>
+    </event>
+</config>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">bce_completeness_worklist_listing.bce_completeness_worklist_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>bce_completeness_worklist_columns</spinner>
+        <deps>
+            <dep>bce_completeness_worklist_listing.bce_completeness_worklist_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="bce_completeness_worklist_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">product_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>BigCartEnergy_CatalogCompleteness::dashboard</aclResource>
+        <dataProvider class="BigCartEnergy\CatalogCompleteness\Ui\DataProvider\WorkList\DataProvider" name="bce_completeness_worklist_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>product_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>false</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters">
+            <filterSelect name="band" provider="${ $.parentName }">
+                <settings>
+                    <options class="BigCartEnergy\CatalogCompleteness\Model\Source\Band"/>
+                    <caption translate="true">All bands</caption>
+                    <label translate="true">Band</label>
+                    <dataScope>band</dataScope>
+                </settings>
+            </filterSelect>
+        </filters>
+        <massaction name="listing_massaction">
+            <action name="recalculate">
+                <settings>
+                    <url path="bce_completeness/score/recalculate"/>
+                    <type>recalculate</type>
+                    <label translate="true">Recalculate</label>
+                </settings>
+            </action>
+            <action name="export">
+                <settings>
+                    <url path="bce_completeness/score/export"/>
+                    <type>export</type>
+                    <label translate="true">Export selected</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging" class="BigCartEnergy\CatalogCompleteness\Ui\Component\Listing\Paging"/>
+    </listingToolbar>
+    <columns name="bce_completeness_worklist_columns">
+        <selectionsColumn name="ids" component="BigCartEnergy_CatalogCompleteness/js/grid/columns/multiselect" sortOrder="0">
+            <settings>
+                <indexField>product_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="thumbnail" class="Magento\Catalog\Ui\Component\Listing\Columns\Thumbnail" component="BigCartEnergy_CatalogCompleteness/js/grid/columns/thumbnail" sortOrder="10">
+            <settings>
+                <altField>name</altField>
+                <hasPreview>1</hasPreview>
+                <label translate="true">Thumbnail</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="product_id" sortOrder="20">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="sku" sortOrder="30">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">SKU</label>
+            </settings>
+        </column>
+        <column name="name" sortOrder="40">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Name</label>
+            </settings>
+        </column>
+        <column name="attribute_set_id" component="Magento_Ui/js/grid/columns/select" sortOrder="50">
+            <settings>
+                <filter>select</filter>
+                <options class="BigCartEnergy\CatalogCompleteness\Model\Source\AttributeSet"/>
+                <dataType>select</dataType>
+                <label translate="true">Attribute set</label>
+            </settings>
+        </column>
+        <column name="type_id" component="Magento_Ui/js/grid/columns/select" sortOrder="60">
+            <settings>
+                <filter>select</filter>
+                <options class="BigCartEnergy\CatalogCompleteness\Model\Source\ProductType"/>
+                <dataType>select</dataType>
+                <label translate="true">Type</label>
+            </settings>
+        </column>
+        <column name="score" class="BigCartEnergy\CatalogCompleteness\Ui\Component\Listing\Column\Score" component="BigCartEnergy_CatalogCompleteness/js/grid/columns/score" sortOrder="70">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="noScoreLabel" xsi:type="string" translate="true">No rules assigned</item>
+                </item>
+            </argument>
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Score</label>
+                <sorting>asc</sorting>
+                <bodyTmpl>BigCartEnergy_CatalogCompleteness/grid/cells/score</bodyTmpl>
+            </settings>
+        </column>
+        <column name="missing" class="BigCartEnergy\CatalogCompleteness\Ui\Component\Listing\Column\Missing" component="BigCartEnergy_CatalogCompleteness/js/grid/columns/missing" sortOrder="80">
+            <settings>
+                <label translate="true">Missing</label>
+                <sortable>false</sortable>
+                <bodyTmpl>BigCartEnergy_CatalogCompleteness/grid/cells/missing</bodyTmpl>
+            </settings>
+        </column>
+        <column name="scored_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="90">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Last scored</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="BigCartEnergy\CatalogCompleteness\Ui\Component\Listing\Column\ProductActions" sortOrder="100">
+            <settings>
+                <indexField>product_id</indexField>
+                <label translate="true">Action</label>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

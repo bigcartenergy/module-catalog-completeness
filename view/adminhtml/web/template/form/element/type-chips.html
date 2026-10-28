@@ -1,0 +1,23 @@
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<div class="bce-completeness-chips" role="group" data-bind="attr: {'aria-label': $t('Applies to product types')}">
+    <!-- ko foreach: options -->
+    <button type="button" class="bce-completeness-type-chip"
+            data-bind="click: function () { $parent.toggleType(value); },
+                       css: {'_on': $parent.isOn(value)},
+                       attr: {'aria-pressed': $parent.isOn(value) ? 'true' : 'false'},
+                       disable: $parent.disabled">
+        <!-- ko if: $parent.isOn(value) -->
+        <svg width="10" height="10" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 8.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2.4"></path></svg>
+        <!-- /ko -->
+        <span data-bind="text: label"></span>
+    </button>
+    <!-- /ko -->
+    <!-- ko foreach: value -->
+    <input type="hidden" data-bind="value: $data, attr: {name: $parent.inputName + '[]'}">
+    <!-- /ko -->
+</div>

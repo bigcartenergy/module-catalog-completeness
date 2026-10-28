@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Big Cart Energy. All rights reserved.
+ * SPDX-License-Identifier: OSL-3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="BigCartEnergy\CatalogCompleteness\Api\Data\RuleSetInterface" type="BigCartEnergy\CatalogCompleteness\Model\RuleSet"/>
+    <preference for="BigCartEnergy\CatalogCompleteness\Api\Data\RuleInterface" type="BigCartEnergy\CatalogCompleteness\Model\Rule"/>
+    <preference for="BigCartEnergy\CatalogCompleteness\Api\Data\RuleSetSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="BigCartEnergy\CatalogCompleteness\Api\Data\ProductScoreInterface" type="BigCartEnergy\CatalogCompleteness\Model\Api\ProductScore"/>
+    <preference for="BigCartEnergy\CatalogCompleteness\Api\RuleSetRepositoryInterface" type="BigCartEnergy\CatalogCompleteness\Model\RuleSetRepository"/>
+    <preference for="BigCartEnergy\CatalogCompleteness\Api\CompletenessManagementInterface" type="BigCartEnergy\CatalogCompleteness\Model\Api\CompletenessManagement"/>
+    <preference for="BigCartEnergy\CatalogCompleteness\Model\Rule\CatalogLookupInterface" type="BigCartEnergy\CatalogCompleteness\Model\Catalog\Lookup"/>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="bceCompletenessRecalculate" xsi:type="object">BigCartEnergy\CatalogCompleteness\Console\Command\RecalculateCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Action">
+        <plugin name="bce_completeness_reindex_after_mass_update" type="BigCartEnergy\CatalogCompleteness\Plugin\ReindexAfterMassAttributeUpdate" sortOrder="100"/>
+    </type>
+    <type name="BigCartEnergy\CatalogCompleteness\Model\Hint\HintRegistry">
+        <arguments>
+            <argument name="lists" xsi:type="array">
+                <item name="core" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\CoreContentHints</item>
+                <item name="google" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\GoogleHints</item>
+                <item name="microsoft" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\MicrosoftHints</item>
+                <item name="meta" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\MetaHints</item>
+                <item name="pinterest" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\PinterestHints</item>
+                <item name="tiktok" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\TikTokHints</item>
+                <item name="amazon" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\AmazonHints</item>
+                <item name="ebay" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\EbayHints</item>
+                <item name="walmart" xsi:type="object">BigCartEnergy\CatalogCompleteness\Model\Hint\WalmartHints</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="bce_completeness_ruleset_listing_data_source" xsi:type="string">BigCartEnergy\CatalogCompleteness\Model\ResourceModel\RuleSet\Grid\Collection</item>
+                <item name="bce_completeness_worklist_listing_data_source" xsi:type="string">BigCartEnergy\CatalogCompleteness\Model\ResourceModel\WorkList\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="BigCartEnergy\CatalogCompleteness\Ui\DataProvider\WorkList\FilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">BigCartEnergy\CatalogCompleteness\Ui\DataProvider\WorkList\KeywordFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="BigCartEnergy\CatalogCompleteness\Ui\DataProvider\WorkList\Reporting" type="Magento\Framework\View\Element\UiComponent\DataProvider\Reporting">
+        <arguments>
+            <argument name="filterPool" xsi:type="object">BigCartEnergy\CatalogCompleteness\Ui\DataProvider\WorkList\FilterPool</argument>
+        </arguments>
+    </virtualType>
+    <type name="BigCartEnergy\CatalogCompleteness\Ui\DataProvider\WorkList\DataProvider">
+        <arguments>
+            <argument name="reporting" xsi:type="object">BigCartEnergy\CatalogCompleteness\Ui\DataProvider\WorkList\Reporting</argument>
+            <argument name="filterPool" xsi:type="object">BigCartEnergy\CatalogCompleteness\Ui\DataProvider\WorkList\FilterPool</argument>
+        </arguments>
+    </type>
+    <virtualType name="BigCartEnergy\CatalogCompleteness\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/bce_completeness.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="BigCartEnergy\CatalogCompleteness\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">bce_completeness</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="file" xsi:type="object">BigCartEnergy\CatalogCompleteness\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="BigCartEnergy\CatalogCompleteness\Cron\Rescore">
+        <arguments>
+            <argument name="logger" xsi:type="object">BigCartEnergy\CatalogCompleteness\Logger\Logger</argument>
+        </arguments>
+    </type>
+</config>
