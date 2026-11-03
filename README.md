@@ -33,16 +33,18 @@ Out of scope at launch: per-store-view scoring, GraphQL, storefront output of an
 
 ## Requirements
 
-- Composer accepts Magento Open Source 2.3.0 to 2.4.9 on PHP 7.1 to 8.5 (the code uses PHP 7.1 syntax throughout). The lines tested so far are listed below; any other line is untested, so test on staging first. On 2.3.0 to 2.3.4, Magento itself does not honour the template guard this module relies on (see Compatibility). Magento 2.0 to 2.2 are not supported. Adobe Commerce is not supported at launch (see the FAQ).
+- Composer accepts Magento Open Source 2.3.0 to 2.4.9 on PHP 7.1 to 8.5 (the code uses PHP 7.1 syntax throughout) and the Mage-OS Distribution from 1.0.0 to 4.0.0, except 1.0.2, whose packages replace no `magento/*` package, so no Magento extension installs there. The lines tested so far are listed below; any other line is untested, so test on staging first. On 2.3.0 to 2.3.4, Magento itself does not honour the template guard this module relies on (see Compatibility). Magento 2.0 to 2.2 are not supported. Adobe Commerce is not supported at launch (see the FAQ).
 - `bigcartenergy/module-core`, installed by composer with this package. It owns the Big Cart Energy menu item and configuration tab and does nothing on its own.
 
 ### Compatibility
 
 Every framework API the module uses (declarative schema, the materialized view indexer, the database message queue, UI component forms, listings and dynamic rows, the REST routes, extension attributes) exists from 2.3.0 on, and the code was checked class by class against the 2.3.0, 2.3.5-p2, 2.3.7-p4, 2.4.8 and 2.4.9 sources. Two things differ by line and are handled in the module: the templates escape through the block (the `$escaper` variable only exists from 2.4.0), and the `__disableTmpl` guard on admin-controlled labels is honoured by Magento from 2.3.5 (earlier lines ignore it, as they do for core's own guards). Nothing branches on a version string.
 
+**Mage-OS.** Mage-OS packages replace the `magento/*` packages this module requires, so it installs unchanged. Mage-OS 1.1.0 and later open the admin in their own theme, built on Magento's; the module's screens were tested in it. Mage-OS 1.1.0 to 2.2.2 bundle a compiled-interceptor package that keeps plugin lists in `generated/staticcache`, a folder Magento's cleanup never empties, so once this module's code is gone the lists still name its plugins and Magento cannot generate the interceptors of the classes they wrap: `bin/magento` itself, the next request and `setup:di:compile` can all fail. The module's uninstall routine deletes its entries there. `module:uninstall BigCartEnergy_CatalogCompleteness --remove-data` runs it, and so does the command without the flag unless you answer no when it asks whether to remove the data (a non-interactive run counts as yes). After any removal that skips the routine, such as `module:disable` and `composer remove`, delete that folder once the code is gone and before `setup:upgrade`, `setup:di:compile` or the next request (see Remove). Mage-OS 1.1.x to 1.3.x stop `setup:di:compile` on PHP 8.4 in their own code (fixed in 2.0.0), so those lines were tested on PHP 8.3.
+
 ### Tested versions
 
-A version that is not in this table has not been tested. Use at your own risk and test on staging first.
+A version that is not in these tables has not been tested. Use at your own risk and test on staging first.
 
 | Magento Open Source | PHP | Database | Result |
 | --- | --- | --- | --- |
@@ -51,6 +53,25 @@ A version that is not in this table has not been tested. Use at your own risk an
 | 2.4.7 | 8.2 | MySQL 8.0 | Pass: the same checks |
 | 2.4.6 | 8.1 | MySQL 8.0 | Pass: the same checks |
 | 2.3.7-p4 | 7.4 | MySQL 5.7 | Pass: the same checks |
+
+| Mage-OS | Based on Magento Open Source | PHP | Database | Result |
+| --- | --- | --- | --- | --- |
+| 4.0.0 | 2.4.9 | 8.4, 8.5 | MySQL 8.4 | Pass: the same checks |
+| 3.6.0 | 2.4.9 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 3.5.0 | 2.4.9 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 3.4.0 | 2.4.9 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 3.3.0 | 2.4.9 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 3.2.0 | 2.4.9 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 3.1.0 | 2.4.9 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 3.0.0 | 2.4.9 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 2.3.0 | 2.4.8-p5 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 2.2.2 | 2.4.8-p4 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 2.1.0 | 2.4.8-p3 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 2.0.0 | 2.4.8-p3 | 8.4 | MySQL 8.4 | Pass: the same checks |
+| 1.3.1 | 2.4.8-p2 | 8.3 | MySQL 8.4 | Pass: the same checks |
+| 1.2.0 | 2.4.8-p1 | 8.3 | MySQL 8.4 | Pass: the same checks |
+| 1.1.1 | 2.4.8 | 8.3 | MySQL 8.4 | Pass: the same checks |
+| 1.0.6 | 2.4.7-p4 | 8.3 | MySQL 8.0 | Pass: the same checks |
 
 ## Install
 
@@ -74,7 +95,7 @@ In production mode also run `bin/magento setup:static-content:deploy` after the 
 
 ## Keeping scores current
 
-The indexer `bce_completeness_score` works in either mode. Which mode it starts in depends on the Magento version: 2.4.8 and 2.4.9 put a new indexer in Update by Schedule, 2.4.7 and earlier leave it in Update on Save whatever the other indexers use. Check it after the install and set the mode you want:
+The indexer `bce_completeness_score` works in either mode. Which mode it starts in depends on the Magento version: 2.4.8 and 2.4.9 put a new indexer in Update by Schedule, 2.4.7 and earlier leave it in Update on Save whatever the other indexers use (Mage-OS follows its upstream: 1.1.0 and later start it in Update by Schedule, 1.0.x in Update on Save). Check it after the install and set the mode you want:
 
 ```
 bin/magento indexer:show-mode bce_completeness_score
@@ -150,20 +171,25 @@ Under Big Cart Energy > PIM: Catalog Completeness in User Roles: Dashboard, Rule
 ```
 bin/magento module:disable BigCartEnergy_CatalogCompleteness
 composer remove bigcartenergy/module-catalog-completeness
+rm -rf generated/staticcache   # Mage-OS 1.1.0 to 2.2.2
 bin/magento setup:upgrade
 bin/magento setup:di:compile   # production mode
 bin/magento cache:clean
 ```
 
+On Mage-OS 1.1.0 to 2.2.2, the `rm -rf generated/staticcache` line has to run from the Magento root after `composer remove` and before `setup:upgrade`, `setup:di:compile` or the next request (see Compatibility). Elsewhere it is harmless.
+
 **The Core module.** `bigcartenergy/module-core` is removable on its own once no other Big Cart Energy module requires it. When Catalog Completeness was the only one, composer removes `module-core` with it as an orphaned dependency, and `setup:upgrade` drops the `BigCartEnergy_Core` entry from `app/etc/config.php` because the module's code is gone. To be explicit, name both: `bin/magento module:disable BigCartEnergy_CatalogCompleteness BigCartEnergy_Core` and `composer remove bigcartenergy/module-catalog-completeness bigcartenergy/module-core`.
 
-**The data.** The removal above keeps the six `bce_completeness_*` tables and the module's configuration values: declarative schema drops a table only when an installed module's `db_schema_whitelist.json` lists it and no enabled module's `db_schema.xml` declares it, and `composer remove` takes the whitelist away with the code before `setup:upgrade` runs. Do not run `setup:upgrade` while the module is disabled but still installed: Magento reads table declarations only from enabled modules but whitelists from every installed one, so that `setup:upgrade` drops the six tables, with the rule sets and scores in them. To drop them on purpose, run the uninstall command before removing the package; it runs the module's `Uninstall` class, which first takes the indexer out of Update by Schedule (so the catalog tables' triggers no longer mention the module and the changelog table goes with them), then drops the six tables and removes the indexer, queue, configuration, cron schedule and flag rows, and finally removes the package with composer:
+**The data.** The removal above keeps the six `bce_completeness_*` tables and the module's configuration values: declarative schema drops a table only when an installed module's `db_schema_whitelist.json` lists it and no enabled module's `db_schema.xml` declares it, and `composer remove` takes the whitelist away with the code before `setup:upgrade` runs. Do not run `setup:upgrade` while the module is disabled but still installed: Magento reads table declarations only from enabled modules but whitelists from every installed one, so that `setup:upgrade` drops the six tables, with the rule sets and scores in them. To drop them on purpose, run the uninstall command before removing the package; it runs the module's `Uninstall` class, which first takes the indexer out of Update by Schedule (so the catalog tables' triggers no longer mention the module and the changelog table goes with them), then drops the six tables and removes the indexer, queue, configuration, cron schedule and flag rows, on Mage-OS 1.1.0 to 2.2.2 deletes the cached plugin lists that still name its plugins, and finally removes the package with composer:
 
 ```
 bin/magento module:uninstall BigCartEnergy_CatalogCompleteness --remove-data
 ```
 
 `module:uninstall` works for packages installed by composer, which is the case here, and it uninstalls this module only. The Core module stays installed and enabled while something else requires `bigcartenergy/module-core`: another Big Cart Energy module, or the store's own `composer.json`. When Catalog Completeness was installed alone, as under Install, composer removes `module-core` with it as an orphaned dependency, as in the removal above; the `--no-update-with-dependencies` that Magento passes to composer does not keep it. To keep the Core module, run `composer require bigcartenergy/module-core` before the uninstall. Product saves keep working during and after the uninstall in either indexer mode. The log file `var/log/bce_completeness.log` stays; delete it by hand if you like.
+
+On Mage-OS 1.1.0 to 2.2.2 the `Uninstall` class deletes the cached plugin lists in `generated/staticcache` that name this module's plugins, so the uninstall needs no manual step there. If it cannot delete them, it logs one warning to `var/log/system.log`; then run `rm -rf generated/staticcache` from the Magento root, which is safe because that folder holds only caches the package rebuilds. Without `--remove-data`, `module:uninstall` asks whether to remove the data: a yes, or a non-interactive run, runs the `Uninstall` class as above; a no keeps the data and runs none of this module's code, so on those releases delete the folder yourself before `setup:upgrade`, `setup:di:compile` or the next request.
 
 ## Installation and configuration service
 

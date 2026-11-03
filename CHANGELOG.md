@@ -2,7 +2,17 @@
 
 All notable changes to `bigcartenergy/module-catalog-completeness` by Big Cart Energy.
 
-## Unreleased
+## 1.0.1 - 2026-11-03
+
+### Fixed
+
+- On Mage-OS 1.1.0 to 2.2.2, `module:uninstall BigCartEnergy_CatalogCompleteness --remove-data` left the store unable to generate the interceptors of the product repository and the product action, at the next request in developer mode and in `setup:di:compile`: the compiled-interceptor package those releases bundle keeps plugin lists in `generated/staticcache`, which Magento's cleanup never empties. The uninstall now deletes the cached lists that name this module's plugins. Nothing changes on Magento Open Source or the other Mage-OS releases.
+
+### Documentation
+
+- Tested on the Mage-OS Distribution: 4.0.0 (PHP 8.4 and 8.5), 3.6.0, 3.5.0, 3.4.0, 3.3.0, 3.2.0, 3.1.0, 3.0.0, 2.3.0, 2.2.2, 2.1.0, 2.0.0, 1.3.1, 1.2.0, 1.1.1 and 1.0.6.
+
+## 1.0.0 - 2026-10-28
 
 ### Added
 
