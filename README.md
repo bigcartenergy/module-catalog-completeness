@@ -6,6 +6,10 @@
 
 In the admin it sits under Big Cart Energy > PIM: Catalog Completeness, with three screens: Dashboard, Rule sets and Settings.
 
+<p><a href="https://www.youtube.com/watch?v=9_2pLrUO8zQ"><img src="https://img.youtube.com/vi/9_2pLrUO8zQ/maxresdefault.jpg" alt="Catalog Completeness: free PIM-style scoring for Magento Open Source. Watch the video on YouTube." width="640"></a></p>
+
+[Watch the tour on YouTube](https://www.youtube.com/watch?v=9_2pLrUO8zQ): the scores, the work list, channel profiles and the rescore, in under a minute.
+
 ## The problem
 
 A catalog with thousands of SKUs is never finished. Descriptions stop at one line, a third of the products have one image, the GTIN column is half empty, and nobody can say which products to fix first. Shoppers bounce, feeds get disapproved, and the data entry list is a spreadsheet somebody made last year.
