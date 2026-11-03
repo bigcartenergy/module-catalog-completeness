@@ -1,8 +1,8 @@
 <p><img src="docs/wheelie.svg" alt="" width="64" height="64"></p>
 
-# Catalog Completeness: a PIM module for Magento Open Source
+# Catalog Completeness: a PIM module for Magento Open Source and Mage-OS
 
-`bigcartenergy/module-catalog-completeness` is a free PIM module for Magento Open Source by Big Cart Energy: completeness scoring against weighted rules per attribute set, channel-readiness profiles, a work list of the products to fix first, CSV export and a REST API, all in the Magento admin. It does not syndicate feeds to any channel and holds no product data outside Magento: the catalog stays in Magento, and the module measures it.
+`bigcartenergy/module-catalog-completeness` is a free PIM module for Magento Open Source and Mage-OS by Big Cart Energy: completeness scoring against weighted rules per attribute set, channel-readiness profiles, a work list of the products to fix first, CSV export and a REST API, all in the Magento admin. It does not syndicate feeds to any channel and holds no product data outside Magento: the catalog stays in Magento, and the module measures it.
 
 In the admin it sits under Big Cart Energy > PIM: Catalog Completeness, with three screens: Dashboard, Rule sets and Settings.
 
