@@ -13,7 +13,7 @@ use BigCartEnergy\CatalogCompleteness\Api\Data\RuleInterface;
  * What the evaluator needs to know about an attribute: its storage type, input type and options.
  * Plain value object so the evaluator can be unit tested without the EAV layer.
  */
-final class AttributeDescriptor
+class AttributeDescriptor
 {
     public const INPUT_GALLERY = 'gallery';
     public const INPUT_STOCK_STATUS = 'stock_status';

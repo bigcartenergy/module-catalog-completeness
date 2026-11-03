@@ -12,7 +12,7 @@ use BigCartEnergy\CatalogCompleteness\Api\Data\RuleInterface;
 /**
  * The outcome of scoring one product against one rule set.
  */
-final class ScoreResult
+class ScoreResult
 {
     /**
      * @var int|null

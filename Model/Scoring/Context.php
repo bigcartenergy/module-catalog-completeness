@@ -13,7 +13,7 @@ use BigCartEnergy\CatalogCompleteness\Model\Rule\AttributeDescriptor;
  * Everything a scoring run needs besides the product values: the attribute descriptors of every rule and
  * which attribute belongs to which attribute set. Built once per run, shared by every chunk.
  */
-final class Context
+class Context
 {
     /**
      * @var array<string, AttributeDescriptor>

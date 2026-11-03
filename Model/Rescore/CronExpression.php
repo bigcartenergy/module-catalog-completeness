@@ -16,7 +16,7 @@ namespace BigCartEnergy\CatalogCompleteness\Model\Rescore;
  * same way: a step is allowed on the star only, because 2.4 counts a step from the start of a range and 2.3
  * does not.
  */
-final class CronExpression
+class CronExpression
 {
     public const MAX_LENGTH = 200;
 

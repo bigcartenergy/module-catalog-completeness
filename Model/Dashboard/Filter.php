@@ -12,7 +12,7 @@ use BigCartEnergy\CatalogCompleteness\Model\Band\Resolver as BandResolver;
 /**
  * The dashboard's filter state, carried as query parameters and applied to everything below the filter bar.
  */
-final class Filter
+class Filter
 {
     public const PARAM_SCOPE = 'scope';
     public const PARAM_ATTRIBUTE_SET = 'attribute_set';

@@ -13,7 +13,7 @@ use BigCartEnergy\CatalogCompleteness\Model\Rule\AttributeDescriptor;
 /**
  * The admin-scope values of one product that the rules need, plus the two pseudo attributes.
  */
-final class ProductData
+class ProductData
 {
     /**
      * @var int

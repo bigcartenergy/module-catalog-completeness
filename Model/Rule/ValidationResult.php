@@ -10,7 +10,7 @@ namespace BigCartEnergy\CatalogCompleteness\Model\Rule;
 /**
  * Normalised rule rows plus the errors found, each tied to a row and a field so the editor can focus it.
  */
-final class ValidationResult
+class ValidationResult
 {
     /**
      * @var array<int, array<string, mixed>>

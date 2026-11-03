@@ -12,7 +12,7 @@ namespace BigCartEnergy\CatalogCompleteness\Model\Export;
  * apostrophe, so it opens as text. The check looks past leading whitespace (spaces, line breaks, no-break
  * spaces, a byte order mark), and a tab or carriage return anywhere in that leading run is itself a trigger.
  */
-final class CsvCell
+class CsvCell
 {
     /**
      * Optional leading whitespace, then a formula trigger (=, +, -, @) or a tab or carriage return.

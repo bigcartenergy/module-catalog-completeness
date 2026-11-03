@@ -14,7 +14,7 @@ use BigCartEnergy\CatalogCompleteness\Model\Scoring\Context;
  * What one run scores: the enabled rule sets in scope, which one is primary for each attribute set, the
  * channel profiles, and the attribute context shared by every chunk.
  */
-final class Plan
+class Plan
 {
     /**
      * @var RuleSetInterface[]

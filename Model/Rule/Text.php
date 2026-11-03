@@ -11,7 +11,7 @@ namespace BigCartEnergy\CatalogCompleteness\Model\Rule;
  * Turns stored rich text into the plain text a merchant would count: entities decoded, tags removed,
  * non-breaking spaces and runs of whitespace collapsed, ends trimmed.
  */
-final class Text
+class Text
 {
     public static function plain(string $html): string
     {

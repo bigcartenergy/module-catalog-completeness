@@ -13,7 +13,7 @@ namespace BigCartEnergy\CatalogCompleteness\Model\Rule;
  * that nest repetition (a quantified group whose content is itself quantified, such as (a+)+) are refused,
  * and every match runs under its own backtracking and recursion limits.
  */
-final class Pattern
+class Pattern
 {
     public const MAX_LENGTH = 500;
 
@@ -131,8 +131,7 @@ final class Pattern
         ini_set('pcre.backtrack_limit', (string)self::BACKTRACK_LIMIT);
         ini_set('pcre.recursion_limit', (string)self::RECURSION_LIMIT);
         try {
-            // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-            $result = @preg_match($regex, $subject);
+            $result = self::quietMatch($regex, $subject);
             if ($result !== 1 || preg_last_error() !== PREG_NO_ERROR) {
                 return false;
             }
@@ -171,12 +170,31 @@ final class Pattern
     private static function compiles(string $regex): bool
     {
         try {
-            // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-            $result = @preg_match($regex, '');
+            $result = self::quietMatch($regex, '');
         } catch (\Throwable $e) {
             return false;
         }
         return $result !== false;
+    }
+
+    /**
+     * preg_match() with the warning PHP raises for a pattern that does not compile or fails at run time
+     * kept out of the log: the return value and preg_last_error() carry the outcome instead.
+     *
+     * @param string $regex
+     * @param string $subject
+     * @return int|false
+     */
+    private static function quietMatch(string $regex, string $subject)
+    {
+        set_error_handler(static function (): bool {
+            return true;
+        });
+        try {
+            return preg_match($regex, $subject);
+        } finally {
+            restore_error_handler();
+        }
     }
 
     /**

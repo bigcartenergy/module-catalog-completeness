@@ -11,7 +11,7 @@ namespace BigCartEnergy\CatalogCompleteness\Model\Hint;
  * One suggestion in the editor's "Suggested" list: a role, a one-line note, and the rule type, parameter and
  * weight to prefill when the merchant clicks Add. The attribute is always left for the merchant to choose.
  */
-final class Hint
+class Hint
 {
     /**
      * @var string

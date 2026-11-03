@@ -81,7 +81,7 @@ class UncoveredCollectionTest extends TestCase
      */
     public function testAddFieldToFilterPutsTheGuardIntoTheWhereClause(): void
     {
-        if (!class_exists(\Zend_Db_Select::class)) {
+        if (defined('BCE_CMPL_STANDALONE_UNIT')) {
             self::markTestSkipped('Needs Zend_Db: run inside a Magento installation.');
         }
         $where = [];

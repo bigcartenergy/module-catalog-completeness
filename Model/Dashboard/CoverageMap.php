@@ -14,7 +14,7 @@ use BigCartEnergy\CatalogCompleteness\Api\Data\RuleInterface;
  * the scope uses applies to its product type, and its attribute set is one the scope reaches. Coverage builds it
  * from the rule sets; it answers for one product and turns into one SQL condition over the product entity.
  */
-final class CoverageMap
+class CoverageMap
 {
     /**
      * @var array<int, string[]|null>|null attribute set id => product types its rule set covers (null: every

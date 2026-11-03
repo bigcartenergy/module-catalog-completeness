@@ -10,7 +10,7 @@ namespace BigCartEnergy\CatalogCompleteness\Model\Band;
 /**
  * The two configurable band thresholds, sanitised so that Poor < Needs work < Good < Complete always holds.
  */
-final class Thresholds
+class Thresholds
 {
     public const DEFAULT_GOOD_FROM = 80;
     public const DEFAULT_NEEDS_WORK_FROM = 50;

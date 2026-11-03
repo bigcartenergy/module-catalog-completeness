@@ -13,6 +13,9 @@ declare(strict_types=1);
 $bceModuleRoot = dirname(__DIR__, 2);
 $bceMagentoRoot = getenv('BCE_MAGENTO_ROOT') ?: null;
 
+// Tests that need Magento's database layer, which this autoloader does not load, skip on this flag.
+define('BCE_CMPL_STANDALONE_UNIT', true);
+
 spl_autoload_register(function (string $class) use ($bceModuleRoot, $bceMagentoRoot): void {
     $modulePrefix = 'BigCartEnergy\\CatalogCompleteness\\';
     if (strncmp($class, $modulePrefix, strlen($modulePrefix)) === 0) {
