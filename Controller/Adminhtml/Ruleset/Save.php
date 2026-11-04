@@ -99,7 +99,8 @@ class Save extends Action implements HttpPostActionInterface
             $sets = $sets === '' ? [] : explode(',', $sets);
         }
         $ruleSet->setAttributeSetIds(is_array($sets) ? array_map('intval', $sets) : []);
-        $ruleSet->setRules($this->rulesFromRequest($request->getParam('rules')));
+        $rows = $this->inScreenOrder($request->getParam('rules'));
+        $ruleSet->setRules($this->rulesFromRequest($rows));
 
         try {
             $saved = $this->repository->save($ruleSet);
@@ -107,7 +108,7 @@ class Save extends Action implements HttpPostActionInterface
             foreach (array_filter(array_map('trim', explode("\n", (string)$e->getMessage()))) as $line) {
                 $this->messageManager->addErrorMessage($line);
             }
-            $this->dataPersistor->set(self::PERSIST_KEY, $this->persistable($request->getParams()));
+            $this->dataPersistor->set(self::PERSIST_KEY, $this->persistable(['rules' => $rows] + $request->getParams()));
             return $redirect->setPath('bce_completeness/ruleset/edit', $id > 0 ? ['id' => $id] : []);
         }
         $this->dataPersistor->clear(self::PERSIST_KEY);
@@ -118,6 +119,35 @@ class Save extends Action implements HttpPostActionInterface
             return $redirect->setPath('bce_completeness/ruleset/edit', ['id' => $savedId, 'saved' => 'recalculating']);
         }
         return $redirect->setPath('bce_completeness/ruleset/edit', ['id' => $savedId, 'saved' => 'stale']);
+    }
+
+    /**
+     * The posted rows in the order the editor shows them. The rules table orders its rows by position (counted from
+     * 1, see the form's data provider), and Move up/down and drag change only the positions, so the rows are sorted
+     * by position here, the posted order breaking a tie; a row without a numeric position keeps its posted place
+     * after the others. The rules are saved and validated in this order, and a failed save redisplays them in it.
+     *
+     * @param mixed $raw
+     * @return array<int, mixed>
+     */
+    private function inScreenOrder($raw): array
+    {
+        if (!is_array($raw)) {
+            return [];
+        }
+        $rows = [];
+        foreach (array_values($raw) as $index => $row) {
+            $position = is_array($row) && isset($row['position']) && is_numeric($row['position'])
+                ? (int)$row['position']
+                : PHP_INT_MAX;
+            $rows[] = [$position, $index, $row];
+        }
+        usort($rows, static function (array $a, array $b): int {
+            return [$a[0], $a[1]] <=> [$b[0], $b[1]];
+        });
+        return array_map(static function (array $entry) {
+            return $entry[2];
+        }, $rows);
     }
 
     /**
