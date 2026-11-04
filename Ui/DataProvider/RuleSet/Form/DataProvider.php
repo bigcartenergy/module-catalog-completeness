@@ -201,13 +201,17 @@ class DataProvider extends AbstractDataProvider
     }
 
     /**
+     * One row of the rules table. The position counts from 1: Magento's dynamic rows read a position of 0 as none
+     * and, when a row is removed, give that row the highest position instead, which moved the first rule down the
+     * table (the saved order was not affected).
+     *
      * @return array<string, mixed>
      */
     private function ruleToRow(RuleInterface $rule, int $position): array
     {
         return [
             'record_id' => $position,
-            'position' => $position,
+            'position' => $position + 1,
             'rule_id' => $rule->getRuleId() ?? '',
             'role' => $rule->getRole() ?? '',
             'attribute_code' => $rule->getAttributeCode(),
@@ -234,7 +238,7 @@ class DataProvider extends AbstractDataProvider
             }
             $rules[] = [
                 'record_id' => $position,
-                'position' => $position++,
+                'position' => ++$position, // from 1, see ruleToRow()
                 'rule_id' => isset($row['rule_id']) && (int)$row['rule_id'] > 0 ? (int)$row['rule_id'] : '',
                 'role' => (string)($row['role'] ?? ''),
                 'attribute_code' => (string)($row['attribute_code'] ?? ''),

@@ -176,6 +176,11 @@ define([
          * pick it up when they are created. A prefilled attribute is then checked as a choice in the picker is,
          * so a duplicate says so at once.
          *
+         * The new row's record id is one no other row holds. The dynamic rows remove a row by that id (every row
+         * that carries it), and after a removal the remaining rows keep their ids while they move up, so the row
+         * count can be an id already in use: a later removal then took a second, unrelated rule with it and left
+         * the table showing a row that no longer existed.
+         *
          * @param {Object} data
          */
         addRow: function (data) {
@@ -186,7 +191,7 @@ define([
             _.each(data || {}, function (value, key) {
                 self.source.set(path + '.' + index + '.' + key, value);
             });
-            this.processingAddChild(false, index, index);
+            this.processingAddChild(false, index, this.nextRecordId());
 
             if (data && data.attribute_code) {
                 registry.get(this.name + '.' + index + '.attribute_code', function (picker) {
@@ -197,6 +202,19 @@ define([
                 });
             }
             $(document).trigger('bce-completeness:rules-changed');
+        },
+
+        /**
+         * One more than the highest record id of the rows (0 for an empty table).
+         *
+         * @returns {Number}
+         */
+        nextRecordId: function () {
+            return _.reduce(this.rows(), function (max, row) {
+                var id = row ? parseInt(row[this.identificationProperty], 10) : NaN;
+
+                return isNaN(id) ? max : Math.max(max, id);
+            }, -1, this) + 1;
         },
 
         /**
