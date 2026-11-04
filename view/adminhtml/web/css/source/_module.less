@@ -1433,12 +1433,14 @@
         min-height: 1.6rem;
     }
 
+    // The menu sits in the row's last table cell, which some admin themes align to the right.
     &__menu {
         background: #fff;
         border: 1px solid @bce-cmpl__border-field;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
         left: 0;
         position: absolute;
+        text-align: left;
         top: 3.6rem;
         width: 36rem;
         z-index: 6;
@@ -1935,4 +1937,11 @@
 
 .bce-completeness-rules .admin__control-table-wrapper {
     overflow-x: auto;
+}
+
+// While an attribute picker is open, its menu may hang below the table: the table's scroll box lets it out, so the
+// menu of a lower row is not cut off at the box's edge (2.4 scrolls it inside the box; on 2.3 the core rule adds
+// overflow-y: hidden, so the lower part could not be reached at all).
+.bce-completeness-rules .admin__control-table-wrapper:has(.bce-completeness-picker._open) {
+    overflow: visible;
 }
