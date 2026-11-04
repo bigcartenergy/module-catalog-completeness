@@ -18,7 +18,8 @@ define([
 
     /**
      * The "Suggested" list beside the rules table. Each Add appends one row with the role, rule type,
-     * parameter and weight prefilled and the attribute left empty; the hint is then marked as added.
+     * parameter and weight prefilled, and the attribute where the hint names one (the core content hints do;
+     * a channel's roles are left for the merchant to map); the hint is then marked as added.
      * Nothing is added without a click.
      */
     return Component.extend({
@@ -116,6 +117,7 @@ define([
             registry.get(RULES, function (rules) {
                 rules.addFromHint({
                     role: self.kind() === 'channel' ? hint.role : '',
+                    'attribute_code': hint.attribute_code || '',
                     'rule_type': hint.rule_type,
                     parameter: hint.parameter || '',
                     weight: hint.weight ? String(hint.weight) : ''
@@ -157,6 +159,20 @@ define([
                 default:
                     return $t('Filled in');
             }
+        },
+
+        /**
+         * Whether an Add from this list brings the attribute along (the core content hints name theirs), for the
+         * line under the list.
+         *
+         * @returns {Boolean}
+         */
+        bringsAttributes: function () {
+            var list = this.current();
+
+            return !!list && _.some(list.hints, function (hint) {
+                return !!hint.attribute_code;
+            });
         },
 
         /**

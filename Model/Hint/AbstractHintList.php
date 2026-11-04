@@ -35,16 +35,17 @@ abstract class AbstractHintList implements HintListInterface
                 (string)__($definition[2]),
                 (string)$definition[3],
                 $definition[4] === null ? null : (string)$definition[4],
-                (int)$definition[5]
+                (int)$definition[5],
+                isset($definition[6]) ? (string)$definition[6] : null
             );
         }
         return $hints;
     }
 
     /**
-     * Rows of [role, label, note, rule type, parameter, weight].
+     * Rows of [role, label, note, rule type, parameter, weight] and, where the hint names one, the attribute code.
      *
-     * @return array<int, array{0: string, 1: string, 2: string, 3: string, 4: string|int|null, 5: int}>
+     * @return array<int, array{0: string, 1: string, 2: string, 3: string, 4: string|int|null, 5: int, 6?: string}>
      */
     abstract protected function definitions(): array;
 

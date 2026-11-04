@@ -172,8 +172,9 @@ define([
         },
 
         /**
-         * Add an empty row, or a row prefilled from a hint (attribute always left empty). The data is written
-         * first; the record and its fields pick it up when they are created.
+         * Add an empty row, or a row prefilled from a hint. The data is written first; the record and its fields
+         * pick it up when they are created. A prefilled attribute is then checked as a choice in the picker is,
+         * so a duplicate says so at once.
          *
          * @param {Object} data
          */
@@ -186,6 +187,15 @@ define([
                 self.source.set(path + '.' + index + '.' + key, value);
             });
             this.processingAddChild(false, index, index);
+
+            if (data && data.attribute_code) {
+                registry.get(this.name + '.' + index + '.attribute_code', function (picker) {
+                    // Once the picker sits in its row, so the duplicate check sees the row.
+                    _.defer(function () {
+                        picker.validate();
+                    });
+                });
+            }
             $(document).trigger('bce-completeness:rules-changed');
         },
 

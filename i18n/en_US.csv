@@ -150,6 +150,7 @@ Delete,Delete
 "Delete this rule set? This cannot be undone.","Delete this rule set? This cannot be undone."
 Description,Description
 Duplicate,Duplicate
+"Each Add appends one row for the attribute Magento normally uses. Choose another attribute in the row if your catalog keeps that content elsewhere.","Each Add appends one row for the attribute Magento normally uses. Choose another attribute in the row if your catalog keeps that content elsewhere."
 "Each Add appends one row with the attribute left for you to choose. Category-specific requirements are not listed.","Each Add appends one row with the attribute left for you to choose. Category-specific requirements are not listed."
 Edit,Edit
 "Edit %1","Edit %1"

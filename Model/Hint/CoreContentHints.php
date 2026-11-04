@@ -10,7 +10,8 @@ namespace BigCartEnergy\CatalogCompleteness\Model\Hint;
 use BigCartEnergy\CatalogCompleteness\Api\Data\RuleInterface;
 
 /**
- * Common core content fields for attribute set rules. The numbers are suggestions a merchant changes freely.
+ * Common core content fields for attribute set rules, each with the attribute Magento keeps it in. The numbers
+ * and the attribute are suggestions a merchant changes freely.
  */
 class CoreContentHints extends AbstractHintList
 {
@@ -37,14 +38,14 @@ class CoreContentHints extends AbstractHintList
     protected function definitions(): array
     {
         return [
-            ['custom', 'Name', 'A product name long enough to say what the item is, for example at least 30 characters.', RuleInterface::TYPE_MIN_LENGTH, '30', self::niceToHave()],
-            ['custom', 'Description', 'A description with real content, for example at least 200 characters after markup is removed.', RuleInterface::TYPE_MIN_LENGTH, '200', self::required()],
-            ['custom', 'Short description', 'A short description for listings and feeds.', RuleInterface::TYPE_PRESENT, null, self::important()],
-            ['custom', 'Images', 'Several enabled gallery images, for example at least 3.', RuleInterface::TYPE_MIN_COUNT, '3', self::important()],
-            ['custom', 'Manufacturer', 'The manufacturer or brand attribute filled in.', RuleInterface::TYPE_PRESENT, null, self::required()],
-            ['custom', 'Weight', 'A weight above 0 for products that ship.', RuleInterface::TYPE_GT_ZERO, null, self::important()],
-            ['custom', 'Meta description', 'A meta description for search results, for example at least 70 characters.', RuleInterface::TYPE_MIN_LENGTH, '70', self::niceToHave()],
-            ['custom', 'Country of manufacture', 'The country of manufacture filled in.', RuleInterface::TYPE_PRESENT, null, self::niceToHave()],
+            ['custom', 'Name', 'A product name long enough to say what the item is, for example at least 30 characters.', RuleInterface::TYPE_MIN_LENGTH, '30', self::niceToHave(), 'name'],
+            ['custom', 'Description', 'A description with real content, for example at least 200 characters after markup is removed.', RuleInterface::TYPE_MIN_LENGTH, '200', self::required(), 'description'],
+            ['custom', 'Short description', 'A short description for listings and feeds.', RuleInterface::TYPE_PRESENT, null, self::important(), 'short_description'],
+            ['custom', 'Images', 'Several enabled gallery images, for example at least 3.', RuleInterface::TYPE_MIN_COUNT, '3', self::important(), RuleInterface::MEDIA_GALLERY],
+            ['custom', 'Manufacturer', 'The manufacturer or brand attribute filled in.', RuleInterface::TYPE_PRESENT, null, self::required(), 'manufacturer'],
+            ['custom', 'Weight', 'A weight above 0 for products that ship.', RuleInterface::TYPE_GT_ZERO, null, self::important(), 'weight'],
+            ['custom', 'Meta description', 'A meta description for search results, for example at least 70 characters.', RuleInterface::TYPE_MIN_LENGTH, '70', self::niceToHave(), 'meta_description'],
+            ['custom', 'Country of manufacture', 'The country of manufacture filled in.', RuleInterface::TYPE_PRESENT, null, self::niceToHave(), 'country_of_manufacture'],
         ];
     }
 }

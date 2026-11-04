@@ -14,6 +14,7 @@ use BigCartEnergy\CatalogCompleteness\Model\Hint\AmazonHints;
 use BigCartEnergy\CatalogCompleteness\Model\Hint\CoreContentHints;
 use BigCartEnergy\CatalogCompleteness\Model\Hint\EbayHints;
 use BigCartEnergy\CatalogCompleteness\Model\Hint\GoogleHints;
+use BigCartEnergy\CatalogCompleteness\Model\Hint\Hint;
 use BigCartEnergy\CatalogCompleteness\Model\Hint\HintListInterface;
 use BigCartEnergy\CatalogCompleteness\Model\Hint\HintRegistry;
 use BigCartEnergy\CatalogCompleteness\Model\Hint\MetaHints;
@@ -25,7 +26,8 @@ use BigCartEnergy\CatalogCompleteness\Model\Rule\Pattern;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Every hint list loads, its roles belong to its channel, and every suggested parameter is valid.
+ * Every hint list loads, its roles belong to its channel, every suggested parameter is valid, and every core
+ * content hint names an attribute its rule type fits.
  */
 class HintListsTest extends TestCase
 {
@@ -106,7 +108,28 @@ class HintListsTest extends TestCase
                 default:
                     self::assertNull($parameter, $where . ': present and gt_zero take no parameter');
             }
+            $code = $hint->getAttributeCode();
+            if ($list->getCode() === CoreContentHints::CODE) {
+                self::assertNotNull($code, $where . ': a core content hint names its attribute');
+                self::assertSame(1, preg_match('/^[a-z0-9_]+$/', (string)$code), $where . ': attribute code');
+                self::assertSame(
+                    $hint->getRuleType() === RuleInterface::TYPE_MIN_COUNT,
+                    $code === RuleInterface::MEDIA_GALLERY,
+                    $where . ': Minimum count only on the images, as the validator requires'
+                );
+                self::assertSame($code, $hint->toArray()['attribute_code'], $where);
+            } else {
+                self::assertNull($code, $where . ': a channel hint leaves the attribute to the merchant');
+            }
         }
+    }
+
+    public function testHintWithoutAttributeKeepsTheSixArgumentForm(): void
+    {
+        $hint = new Hint('custom', 'Label', 'Note', RuleInterface::TYPE_PRESENT, null, RuleInterface::WEIGHT_REQUIRED);
+        self::assertNull($hint->getAttributeCode());
+        self::assertArrayHasKey('attribute_code', $hint->toArray());
+        self::assertNull($hint->toArray()['attribute_code']);
     }
 
     public function testRegistryResolvesKindAndChannel(): void
@@ -126,6 +149,12 @@ class HintListsTest extends TestCase
         self::assertCount(9, $asArray);
         self::assertSame('gtin', $asArray['google']['hints'][6]['role']);
         self::assertArrayHasKey('note', $asArray['google']['hints'][0]);
+        self::assertSame(
+            ['name', 'description', 'short_description', RuleInterface::MEDIA_GALLERY, 'manufacturer', 'weight', 'meta_description', 'country_of_manufacture'],
+            array_column($asArray[CoreContentHints::CODE]['hints'], 'attribute_code'),
+            'the editor receives each core hint with its attribute, in list order'
+        );
+        self::assertNull($asArray['google']['hints'][6]['attribute_code']);
     }
 
     public function testGtinPatternsAcceptTheDocumentedLengths(): void

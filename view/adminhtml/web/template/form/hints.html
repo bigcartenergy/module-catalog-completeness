@@ -31,7 +31,12 @@
             <!-- /ko -->
         </li>
     </ul>
+    <!-- ko if: bringsAttributes() -->
+    <p class="bce-completeness-muted bce-completeness-hints__foot" data-bind="i18n: 'Each Add appends one row for the attribute Magento normally uses. Choose another attribute in the row if your catalog keeps that content elsewhere.'"></p>
+    <!-- /ko -->
+    <!-- ko ifnot: bringsAttributes() -->
     <p class="bce-completeness-muted bce-completeness-hints__foot" data-bind="i18n: 'Each Add appends one row with the attribute left for you to choose. Category-specific requirements are not listed.'"></p>
+    <!-- /ko -->
 </section>
 <!-- /ko -->
 <!-- ko ifnot: current() -->
