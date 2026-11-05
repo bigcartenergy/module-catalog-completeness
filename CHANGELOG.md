@@ -2,6 +2,25 @@
 
 All notable changes to `bigcartenergy/module-catalog-completeness` by Big Cart Energy.
 
+## 1.0.2 - 2026-11-05
+
+### Fixed
+
+- The rule set editor's Suggested core content Add fills in the attribute as well as the rule type, parameter and weight.
+- Removing a rule no longer moves the first rule down the table, and no longer drops a second, unrelated rule from the form, which Save then deleted.
+- The attribute picker's list is no longer cut off at the bottom of the rules table.
+- Move up/down and drag in the rules table now set the saved order of the rules; before, Save kept the order the rules were loaded in.
+
+### Changed
+
+- The code meets Adobe's Commerce Marketplace coding standard. The module's classes are no longer declared `final`, a rule pattern that does not compile or fails while it runs is handled without PHP's `@` operator, and the Marketplace package is built without the maintainer tool in `dev/`. No behaviour change: such a pattern still matches nothing and logs nothing.
+- Run with the module's own `phpunit.xml.dist`, the unit suite skips the one test that needs Magento's database layer; Magento's `dev/tests/unit` run still includes it.
+
+### Tested
+
+- Magento Open Source 2.4.9, 2.4.8, 2.4.7, 2.4.6 and 2.3.7-p4, and the Mage-OS Distribution 4.0.0 (PHP 8.4 and 8.5), 3.6.0, 3.5.0, 3.4.0, 3.3.0, 3.2.0, 3.1.0, 3.0.0, 2.3.0, 2.2.2, 2.1.0, 2.0.0, 1.3.1, 1.2.0, 1.1.1 and 1.0.6, with the same checks as 1.0.1 at this release's code. The README's tables give the PHP and database of each.
+- Adobe's Marketplace installation and Varnish test, reproduced on Magento Open Source 2.4.9 (PHP 8.5, Varnish 8) from the Marketplace package: Composer install, Magento install, compile, static content deploy, production mode, full reindex, and the full-page cache checks before and after price updates over REST.
+
 ## 1.0.1 - 2026-11-03
 
 ### Fixed

@@ -201,7 +201,7 @@ Big Cart Energy installs the module, writes the rule sets and channel profiles w
 
 ## FAQ
 
-**Adobe Commerce?** Not at launch. The module is built for Magento Open Source, which keys product data by `entity_id`. Adobe Commerce keys its versioned product data by `row_id`, and its product tables are structured so that the module's foreign keys and indexer subscriptions would not work unchanged. The module's own tables are designed so that support can be added later.
+**Adobe Commerce?** Not at launch. The module is built for Magento Open Source and Mage-OS, which key product data by `entity_id`. Adobe Commerce keys its versioned product data by `row_id`, and its product tables are structured so that the module's foreign keys and indexer subscriptions would not work unchanged. The module's own tables are designed so that support can be added later.
 
 **Does it change product data?** No. It reads product attributes and gallery images and writes scores to its own tables.
 
